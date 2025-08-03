@@ -45,7 +45,7 @@ Each algorithm demonstrated excellence in different performance aspects:
     \item \textbf{Perfect Precision:} Random Forest (100.00\%)
     \item \textbf{Best Recall:} k-NN with k=3 (75.17\%)
     \item \textbf{Best F1-Score:} k-NN with k=3 (85.50\%)
-    \item \textbf{Overall Best Performance:} k-NN with k=3
+    \item \textbf{Overall Best Performance:} k-NN with k=3, chosen for its superior F1-Score, which indicates the best balance between precision and recall among the models.
 \end{itemize}
 
 \section{Algorithm Analysis}
@@ -132,7 +132,7 @@ All models effectively handled the inherent class imbalance in the dataset, demo
 This project made several significant contributions:
 
 \begin{itemize}
-    \item \textbf{Custom Implementation:} Developed three machine learning algorithms from scratch without using pre-built libraries
+    \item \textbf{Custom Implementation from Scratch:} By developing the core logic of three distinct machine learning algorithms without reliance on pre-built libraries, this project provides deep insights into their internal mechanics and demonstrates a fundamental understanding of the underlying statistical principles.
     \item \textbf{Comprehensive Evaluation:} Conducted thorough performance analysis using multiple metrics
     \item \textbf{Practical Application:} Demonstrated real-world applicability for advertisement detection
     \item \textbf{Reproducible Research:} Created well-documented, reproducible analysis framework
@@ -148,41 +148,18 @@ The results demonstrate statistically meaningful performance differences:
     \item Findings contribute to understanding of classification trade-offs
 \end{itemize}
 
-\section{Limitations and Future Work}
+\section{Limitations}
 
 \subsection{Current Limitations}
 
 \begin{itemize}
     \item \textbf{Feature Engineering:} Limited exploration of feature selection and dimensionality reduction
     \item \textbf{Hyperparameter Optimization:} Basic parameter tuning without extensive grid search
-    \item \textbf{Cross-Validation:} Simple train-test split without k-fold validation
+    \item \textbf{Cross-Validation:} The use of a simple train-test split, rather than a more robust method like k-fold cross-validation, means the performance metrics might be sensitive to the specific data partition and may not fully represent the models' generalizability.
     \item \textbf{Computational Efficiency:} Custom implementations may not be optimally efficient
 \end{itemize}
 
-\subsection{Future Research Directions}
 
-\begin{enumerate}
-    \item \textbf{Advanced Feature Engineering}
-    \begin{itemize}
-        \item Principal Component Analysis (PCA) for dimensionality reduction
-        \item Feature selection algorithms for optimal subset identification
-        \item Feature transformation and scaling techniques
-    \end{itemize}
-    
-    \item \textbf{Enhanced Model Development}
-    \begin{itemize}
-        \item Deep learning approaches for complex pattern recognition
-        \item Advanced ensemble methods beyond Random Forest
-        \item Cost-sensitive learning for imbalanced datasets
-    \end{itemize}
-    
-    \item \textbf{Real-World Implementation}
-    \begin{itemize}
-        \item Real-time classification system development
-        \item Integration with web browsers and content management systems
-        \item Cross-domain advertisement detection studies
-    \end{itemize}
-\end{enumerate}
 
 \section{Final Conclusions}
 
