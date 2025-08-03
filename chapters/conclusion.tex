@@ -15,9 +15,9 @@ The analysis was conducted on a comprehensive dataset containing:
     \item \textbf{Data quality:} No missing values after preprocessing
 \end{itemize}
 
-\section{Key Findings}
+\subsection{Key Findings}
 
-\subsection{Model Performance Comparison}
+\subsubsection{Model Performance Comparison}
 
 The comprehensive evaluation revealed distinct performance characteristics for each algorithm:
 
@@ -36,7 +36,7 @@ Random Forest & 90.65\% & 100.00\% & 38.26\% & 55.34\% \\
 \end{tabular}
 \end{table}
 
-\subsection{Best Performing Models by Metric}
+\subsubsection{Best Performing Models by Metric}
 
 Each algorithm demonstrated excellence in different performance aspects:
 
@@ -48,9 +48,9 @@ Each algorithm demonstrated excellence in different performance aspects:
     \item \textbf{Overall Best Performance:} k-NN with k=3, chosen for its superior F1-Score, which indicates the best balance between precision and recall among the models.
 \end{itemize}
 
-\section{Algorithm Analysis}
+\subsection{Algorithm Analysis}
 
-\subsection{k-Nearest Neighbors (k=3)}
+\subsubsection{k-Nearest Neighbors (k=3)}
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -62,7 +62,7 @@ Each algorithm demonstrated excellence in different performance aspects:
 
 \textbf{Configuration:} k=3 with Z-score normalization on all 1,559 features
 
-\subsection{Decision Tree (max\_depth=3)}
+\subsubsection{Decision Tree (max\_depth=3)}
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -74,7 +74,7 @@ Each algorithm demonstrated excellence in different performance aspects:
 
 \textbf{Configuration:} Maximum depth of 3 levels using first 20 features
 
-\subsection{Random Forest (n\_trees=100)}
+\subsubsection{Random Forest (n\_trees=100)}
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -86,9 +86,9 @@ Each algorithm demonstrated excellence in different performance aspects:
 
 \textbf{Configuration:} 100 decision trees with bootstrap sampling on all features
 
-\section{Practical Implications}
+\subsection{Practical Implications}
 
-\subsection{Application-Specific Recommendations}
+\subsubsection{Application-Specific Recommendations}
 
 Based on the performance analysis, different models are recommended for specific use cases:
 
@@ -115,7 +115,7 @@ Based on the performance analysis, different models are recommended for specific
     \end{itemize}
 \end{enumerate}
 
-\subsection{Class Imbalance Considerations}
+\subsubsection{Class Imbalance Considerations}
 
 All models effectively handled the inherent class imbalance in the dataset, demonstrating:
 \begin{itemize}
@@ -125,9 +125,9 @@ All models effectively handled the inherent class imbalance in the dataset, demo
     \item Effective learning from limited positive examples
 \end{itemize}
 
-\section{Research Contributions}
+\subsection{Research Contributions}
 
-\subsection{Technical Achievements}
+\subsubsection{Technical Achievements}
 
 This project made several significant contributions:
 
@@ -138,7 +138,7 @@ This project made several significant contributions:
     \item \textbf{Reproducible Research:} Created well-documented, reproducible analysis framework
 \end{itemize}
 
-\subsection{Statistical Significance}
+\subsubsection{Statistical Significance}
 
 The results demonstrate statistically meaningful performance differences:
 \begin{itemize}
@@ -148,9 +148,9 @@ The results demonstrate statistically meaningful performance differences:
     \item Findings contribute to understanding of classification trade-offs
 \end{itemize}
 
-\section{Limitations}
+\subsection{Limitations}
 
-\subsection{Current Limitations}
+\subsubsection{Current Limitations}
 
 \begin{itemize}
     \item \textbf{Feature Engineering:} Limited exploration of feature selection and dimensionality reduction
@@ -161,9 +161,9 @@ The results demonstrate statistically meaningful performance differences:
 
 
 
-\section{Final Conclusions}
+\subsection{Final Conclusions}
 
-\subsection{Project Success}
+\subsubsection{Project Success}
 
 This Internet Advertisement Classification project successfully achieved its primary objectives:
 
@@ -174,7 +174,7 @@ This Internet Advertisement Classification project successfully achieved its pri
     \item \textbf{Academic Rigor:} Followed systematic methodology with proper documentation
 \end{itemize}
 
-\subsection{Key Insights}
+\subsubsection{Key Insights}
 
 The study revealed several important insights:
 
@@ -188,7 +188,7 @@ The study revealed several important insights:
     \item \textbf{Interpretability vs. Performance:} Decision Trees offer excellent interpretability while maintaining competitive accuracy
 \end{enumerate}
 
-\subsection{Impact and Significance}
+\subsubsection{Impact and Significance}
 
 This work provides empirical evidence that machine learning can effectively classify internet advertisements with over 80\% accuracy across all implemented methods. The findings contribute to:
 
@@ -199,7 +199,7 @@ This work provides empirical evidence that machine learning can effectively clas
     \item \textbf{Reproducible Research:} Establishing a framework for systematic algorithm comparison
 \end{itemize}
 
-\subsection{Closing Remarks}
+\subsubsection{Closing Remarks}
 
 The Internet Advertisement Classification project demonstrates the practical power of machine learning in solving real-world problems. By implementing and comparing three distinct algorithms, this study provides valuable insights into the strengths and limitations of different approaches to binary classification tasks.
 
