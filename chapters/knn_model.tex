@@ -1,0 +1,190 @@
+\section{k-Nearest Neighbors Model}
+\label{sec:knn-model}
+
+\subsection{Introduction to k-Nearest Neighbors}
+The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, instance-based learning method used for classification and regression. Unlike parametric models that learn a specific function, k-NN makes predictions based on the similarity of new instances to stored training examples.
+
+\textbf{Key characteristics of k-NN:}
+\begin{itemize}
+    \item \textbf{Lazy learning}: No explicit training phase; all computation occurs during prediction
+    \item \textbf{Non-parametric}: Makes no assumptions about data distribution
+    \item \textbf{Instance-based}: Stores all training data and uses it directly for predictions
+    \item \textbf{Distance-based}: Relies on distance metrics to find similar instances
+\end{itemize}
+
+\subsection{Theoretical Foundation}
+\subsubsection{Algorithm Overview}
+For a new instance $\mathbf{x}_{new}$, k-NN finds the $k$ closest training instances and assigns the most common class among these neighbors.
+
+\textbf{Steps:}
+\begin{enumerate}
+    \item Calculate distance from $\mathbf{x}_{new}$ to all training instances
+    \item Select the $k$ nearest neighbors
+    \item Assign class based on majority vote among the $k$ neighbors
+\end{enumerate}
+
+\subsubsection{Distance Metric}
+We use Euclidean distance to measure similarity between instances:
+\begin{equation}
+d(\mathbf{x}_i, \mathbf{x}_j) = \sqrt{\sum_{f=1}^{p} (x_{if} - x_{jf})^2}
+\end{equation}
+
+where $p$ is the number of features (1,558 in our case).
+
+\subsubsection{Feature Normalization}
+Since k-NN is distance-based, feature scaling is crucial. We apply z-score normalization:
+\begin{equation}
+z = \frac{x - \mu}{\sigma}
+\end{equation}
+
+where $\mu$ is the mean and $\sigma$ is the standard deviation of each feature.
+
+\subsection{Implementation}
+\subsubsection{Data Preparation}
+The dataset was prepared for k-NN modeling with the following steps:
+
+\begin{lstlisting}[language=R]
+# Separate features and target
+X <- data[, 1:(ncol(data)-1)]  # All features except target
+y <- data[[target_col]]        # Target variable
+
+# Normalize features using z-score standardization
+X_normalized <- scale(X)
+
+# Train-test split (70-30)
+set.seed(123)
+train_size <- floor(0.7 * nrow(X_normalized))
+train_indices <- sample(seq_len(nrow(X_normalized)), size = train_size)
+
+X_train <- X_normalized[train_indices, ]
+y_train <- y[train_indices]
+X_test <- X_normalized[-train_indices, ]
+y_test <- y[-train_indices]
+\end{lstlisting}
+
+\subsubsection{k-NN Implementation}
+We implemented k-NN from scratch using base R:
+
+\begin{lstlisting}[language=R]
+# Euclidean distance function
+euclidean_distance <- function(x1, x2) {
+  sqrt(sum((x1 - x2)^2))
+}
+
+# k-NN prediction function
+knn_predict <- function(X_train, y_train, X_test, k = 5) {
+  predictions <- character(nrow(X_test))
+  
+  for(i in 1:nrow(X_test)) {
+    # Calculate distances to all training points
+    distances <- numeric(nrow(X_train))
+    for(j in 1:nrow(X_train)) {
+      distances[j] <- euclidean_distance(X_test[i, ], X_train[j, ])
+    }
+    
+    # Find k nearest neighbors
+    k_nearest_indices <- order(distances)[1:k]
+    k_nearest_labels <- y_train[k_nearest_indices]
+    
+    # Majority vote
+    vote_counts <- table(k_nearest_labels)
+    predictions[i] <- names(vote_counts)[which.max(vote_counts)]
+  }
+  
+  return(factor(predictions, levels = levels(y_train)))
+}
+\end{lstlisting}
+
+\subsection{Hyperparameter Tuning}
+\subsubsection{k-Value Selection}
+We tested different values of $k$ to find the optimal number of neighbors:
+
+\begin{table}[H]
+\centering
+\caption{k-NN performance for different k values}
+\label{tab:knn-k-values}
+\begin{tabular}{cc}
+\toprule
+\textbf{k Value} & \textbf{Accuracy} \\
+\midrule
+3 & 0.90 \\
+5 & 0.81 \\
+7 & 0.74 \\
+9 & 0.72 \\
+11 & 0.70 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results show that $k = 3$ provides the best performance with 90\% accuracy on the test subset.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{graphics/04-knn-k_tuning.png}
+\caption{k-NN accuracy vs k value showing optimal performance at k=3}
+\label{fig:knn-k-tuning}
+\end{figure}
+
+\subsection{Model Evaluation}
+\subsubsection{Performance Metrics}
+Using the optimal $k = 3$, the final model achieved:
+
+\begin{itemize}
+    \item \textbf{Accuracy}: 81\%
+    \item \textbf{Precision (ad)}: 99.12\%
+    \item \textbf{Recall (ad)}: 75.17\%
+    \item \textbf{F1-score (ad)}: 85.5\%
+\end{itemize}
+
+\subsubsection{Confusion Matrix Analysis}
+The confusion matrix reveals the model's classification performance:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{graphics/04-knn-confusion_matrix.png}
+\caption{k-NN confusion matrix showing classification results}
+\label{fig:knn-confusion-matrix}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{k-NN confusion matrix (k=3)}
+\label{tab:knn-confusion}
+\begin{tabular}{lcc}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Actual}} \\
+\textbf{Predicted} & \textbf{ad} & \textbf{nonad} \\
+\midrule
+ad & 112 & 1 \\
+nonad & 37 & 50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Results Interpretation}
+\subsubsection{Strengths}
+\begin{itemize}
+    \item \textbf{High precision}: 99.12\% precision means very few false positives
+    \item \textbf{Simple implementation}: No complex parameter tuning required
+    \item \textbf{Interpretable}: Easy to understand why predictions are made
+    \item \textbf{Non-parametric}: No assumptions about data distribution
+\end{itemize}
+
+\subsubsection{Limitations}
+\begin{itemize}
+    \item \textbf{Computational cost}: Requires distance calculation to all training points
+    \item \textbf{Memory intensive}: Stores entire training dataset
+    \item \textbf{Curse of dimensionality}: Performance may degrade with high-dimensional data
+    \item \textbf{Sensitive to irrelevant features}: All features contribute equally to distance
+\end{itemize}
+
+\subsubsection{Class Imbalance Impact}
+The model shows excellent precision (99.12\%) but moderate recall (75.17\%), indicating:
+\begin{itemize}
+    \item Strong ability to correctly identify advertisements when predicted
+    \item Some difficulty in finding all advertisement instances
+    \item Bias toward the majority class (nonad) due to class imbalance
+\end{itemize}
+
+\subsection{Conclusion}
+The k-NN model with $k = 3$ demonstrates solid performance for advertisement classification, achieving 81\% accuracy with very high precision. While the algorithm's simplicity and interpretability are advantages, its computational requirements and sensitivity to high-dimensional data present challenges for large-scale applications. The model's high precision makes it suitable for scenarios where false positives (incorrectly flagging non-ads as ads) are more costly than false negatives.
