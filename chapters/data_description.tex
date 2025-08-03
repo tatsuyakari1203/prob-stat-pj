@@ -1,12 +1,21 @@
 \section{Data Description}
 \label{sec:data_description}
 
-\subsection{Dataset Overview}
+\subsection{Raw Dataset Overview}
 The dataset used in this project is the "Internet Advertisements Data Set" from the UCI Machine Learning Repository. This dataset contains information about internet images and their classification as advertisements or non-advertisements.
 
-The original dataset consists of 3,279 observations with 1,560 columns. The first column serves as an index and is removed during preprocessing, leaving 1,559 features for analysis. The target variable, located in the last column (X1558), indicates whether an image is an advertisement ('ad.') or not ('nonad.').
+The original dataset consists of 3,279 observations with 1,560 columns. The first column (X) serves as an index and is removed during preprocessing, leaving 1,559 features for analysis. The target variable, located in the last column (X1558), indicates whether an image is an advertisement ('ad.') or not ('nonad.').
 
-\subsection{Data Loading}
+\textbf{Initial Dataset Characteristics:}
+\begin{itemize}
+    \item Total samples: 3,279 internet images
+    \item Original features: 1,560 columns (including index and target)
+    \item Feature columns: X0 to X1557 (1,558 numerical attributes)
+    \item Target column: X1558 with values 'ad.' and 'nonad.'
+    \item File format: CSV with headers
+\end{itemize}
+
+\subsection{Raw Data Loading Process}
 The dataset is loaded from a CSV file using the following R code:
 
 \begin{lstlisting}[language=R]
@@ -17,7 +26,7 @@ data <- read.csv("../add.csv", header = TRUE, stringsAsFactors = FALSE)
 target_col <- names(data)[ncol(data)]
 \end{lstlisting}
 
-\subsection{Target Variable Distribution}
+\subsection{Raw Data Target Distribution}
 The target variable shows a significant class imbalance:
 \begin{itemize}
     \item Advertisement images (ad): 459 observations (14\%)
@@ -26,15 +35,32 @@ The target variable shows a significant class imbalance:
 
 This imbalance is typical in advertisement detection problems and will need to be considered when building and evaluating classification models.
 
-\subsection{Missing Values}
+\subsection{Missing Values in Raw Data}
 The dataset contains missing values represented as "?" strings. Initial analysis revealed:
 \begin{itemize}
-    \item Total missing values: 15 occurrences
-    \item All missing values are concentrated in column 5
-    \item Missing values represent approximately 0.46\% of column 5's data
+    \item Total missing values: 15 occurrences across the entire dataset
+    \item All missing values are concentrated in column 5 (X4)
+    \item Missing values represent approximately 0.46\% of column 5's data (15 out of 3,279 observations)
+    \item No other columns contain missing values
+    \item Missing values are handled during preprocessing by converting "?" to NA, then imputing with median values
 \end{itemize}
 
-\subsection{Data Preprocessing}
+\textbf{Missing Value Detection Process:}
+\begin{lstlisting}[language=R]
+# Check for missing values represented as "?"
+missing_count <- sum(data == "?", na.rm = TRUE)
+cat("Total '?' values in dataset:", missing_count)
+
+# Check missing values by column
+for(i in 1:min(20, ncol(data))) {
+  missing_in_col <- sum(data[[i]] == "?", na.rm = TRUE)
+  if(missing_in_col > 0) {
+    cat("Column", i, ":", missing_in_col, "missing values")
+  }
+}
+\end{lstlisting}
+
+\subsection{Data Cleaning and Preprocessing Pipeline}
 Several preprocessing steps were applied to prepare the data for analysis:
 
 \begin{lstlisting}[language=R]
@@ -69,7 +95,7 @@ The preprocessing pipeline includes:
     \item \textbf{Target variable formatting}: The target variable was converted to a factor with clear labels ("ad" and "nonad")
 \end{enumerate}
 
-\subsection{Final Dataset Characteristics}
+\subsection{Clean Data Characteristics}
 After preprocessing, the cleaned dataset has the following properties:
 \begin{itemize}
     \item Dimensions: 3,279 rows × 1,559 columns
@@ -79,14 +105,49 @@ After preprocessing, the cleaned dataset has the following properties:
     \item Class distribution remains: 459 advertisements, 2,820 non-advertisements
 \end{itemize}
 
-\subsection{Basic Statistics}
-Preliminary statistics for the first five feature columns show:
+\subsection{Clean Data Statistical Summary}
+Preliminary statistics for the first five feature columns (after preprocessing) show:
+
+\begin{table}[h]
+\centering
+\caption{Descriptive Statistics for First Five Feature Columns}
+\label{tab:basic_stats}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Column} & \textbf{Mean} & \textbf{Median} & \textbf{SD} & \textbf{Notes} \\
+\hline
+Column 1 (X0) & 1,639.00 & 1,639.00 & 946.71 & No missing values \\
+Column 2 (X1) & 64.02 & 51.00 & 54.87 & No missing values \\
+Column 3 (X2) & 155.34 & 110.00 & 130.03 & No missing values \\
+Column 4 (X3) & 3.91 & 2.10 & 6.04 & No missing values \\
+Column 5 (X4) & 0.77 & 1.00 & 0.42 & Had 15 missing values (imputed) \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Key Observations:}
 \begin{itemize}
-    \item Column 1: Mean = 1,639, Median = 1,639, SD = 946.71
-    \item Column 2: Mean = 64.02, Median = 51, SD = 54.87
-    \item Column 3: Mean = 155.34, Median = 110, SD = 130.03
-    \item Column 4: Mean = 3.91, Median = 2.1, SD = 6.04
-    \item Column 5: Mean = 0.77, Median = 1, SD = 0.42
+    \item Features exhibit varying scales (from 0.77 to 1,639 in mean values)
+    \item Standard deviations range from 0.42 to 946.71, indicating high variability in feature scales
+    \item Column 5 (X4) was the only column requiring missing value imputation
+    \item Normalization or standardization will be beneficial for distance-based algorithms
 \end{itemize}
 
-These statistics indicate varying scales across features, suggesting that normalization or standardization may be beneficial for certain machine learning algorithms.
+\subsection{Data Cleaning Process Summary}
+The complete data cleaning process involved four main steps as documented in the preprocessing pipeline:
+
+\begin{enumerate}
+    \item \textbf{Remove Index Column}: Removed the first column (X) which was a row index
+    \item \textbf{Handle Missing Values}: Converted '?' strings to NA values for proper handling
+    \item \textbf{Impute with Median}: Replaced all NA values in numeric columns with the column median
+    \item \textbf{Clean Target Variable}: Converted the target variable to a factor with levels 'ad' and 'nonad'
+\end{enumerate}
+
+\textbf{Cleaning Results:}
+\begin{itemize}
+    \item Final dimensions: 3,279 rows × 1,559 columns
+    \item Missing values after cleaning: 0
+    \item Target distribution preserved: 459 advertisements, 2,820 non-advertisements
+    \item All feature columns converted to numeric format
+    \item Target variable properly formatted as factor
+\end{itemize}
