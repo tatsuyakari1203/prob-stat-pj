@@ -16,8 +16,6 @@
 
 # Generated data and graphics
 code/*.RData
-code/*.csv
-code/*.txt
 graphics/*.png
 graphics/*.pdf
 
