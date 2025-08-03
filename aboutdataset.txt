@@ -1,0 +1,19 @@
+About Dataset
+Context
+The task is to predict whether an image is an advertisement ("ad") or not ("nonad").
+
+Content
+There are 1559 columns in the data.Each row in the data represent one image which is tagged as ad or nonad in the last column.column 0 to 1557 represent the actual numerical attributes of the images
+
+Acknowledgements
+Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
+
+Here is a BiBTeX citation as well:
+
+@misc{Lichman:2013 ,
+author = "M. Lichman",
+year = "2013",
+title = "{UCI} Machine Learning Repository",
+url = "http://archive.ics.uci.edu/ml",
+institution = "University of California, Irvine, School of Information and Computer Sciences" }
+https://archive.ics.uci.edu/ml/citation_policy.html

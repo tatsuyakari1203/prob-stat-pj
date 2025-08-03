@@ -1,0 +1,12 @@
+ Requirement
+Choose a data set related to your fields (faculties) in the given list (Sheets Topics and Requirements) and determine the corresponding objective for your project.
+Use one/some statistical methods you have not learned in class to analysis the data set and achieve the goal of the project. Then write a report.
+Submit the reports and show up on the presentation day
+The content of the report
+Description of the data
+Clean the data
+Descriptive statistics: histogram, boxplot, scatter plot,...; Mean, median,...
+Objective and how to achieve it (statistical methods?)
+Main result: analyze the data, R code (in a framed textbox), explain the result and interpret the conclusion.
+Contribution of members, table of content, source of the data, references,.. (should be well-organized)
+Understand the entire report
