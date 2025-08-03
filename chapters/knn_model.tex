@@ -1,44 +1,6 @@
 \section{k-Nearest Neighbors Model}
 \label{sec:knn-model}
 
-\subsection{Introduction to k-Nearest Neighbors}
-The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, instance-based learning method used for classification and regression. Unlike parametric models that learn a specific function, k-NN makes predictions based on the similarity of new instances to stored training examples.
-
-\textbf{Key characteristics of k-NN:}
-\begin{itemize}
-    \item \textbf{Lazy learning}: No explicit training phase; all computation occurs during prediction
-    \item \textbf{Non-parametric}: Makes no assumptions about data distribution
-    \item \textbf{Instance-based}: Stores all training data and uses it directly for predictions
-    \item \textbf{Distance-based}: Relies on distance metrics to find similar instances
-\end{itemize}
-
-\subsection{Theoretical Foundation}
-\subsubsection{Algorithm Overview}
-For a new instance $\mathbf{x}_{new}$, k-NN finds the $k$ closest training instances and assigns the most common class among these neighbors.
-
-\textbf{Steps:}
-\begin{enumerate}
-    \item Calculate distance from $\mathbf{x}_{new}$ to all training instances
-    \item Select the $k$ nearest neighbors
-    \item Assign class based on majority vote among the $k$ neighbors
-\end{enumerate}
-
-\subsubsection{Distance Metric}
-We use Euclidean distance to measure similarity between instances:
-\begin{equation}
-d(\mathbf{x}_i, \mathbf{x}_j) = \sqrt{\sum_{f=1}^{p} (x_{if} - x_{jf})^2}
-\end{equation}
-
-where $p$ is the number of features (1,558 in our case).
-
-\subsubsection{Feature Normalization}
-Since k-NN is distance-based, feature scaling is crucial. We apply z-score normalization:
-\begin{equation}
-z = \frac{x - \mu}{\sigma}
-\end{equation}
-
-where $\mu$ is the mean and $\sigma$ is the standard deviation of each feature.
-
 \subsection{Implementation}
 \subsubsection{Data Preparation}
 The dataset was prepared for k-NN modeling with the following steps:
@@ -187,4 +149,4 @@ The model shows excellent precision (99.12\%) but moderate recall (75.17\%), ind
 \end{itemize}
 
 \subsection{Conclusion}
-The k-NN model with $k = 3$ demonstrates solid performance for advertisement classification, achieving 81\% accuracy with very high precision. While the algorithm's simplicity and interpretability are advantages, its computational requirements and sensitivity to high-dimensional data present challenges for large-scale applications. The model's high precision makes it suitable for scenarios where false positives (incorrectly flagging non-ads as ads) are more costly than false negatives.
+The k-NN model achieved excellent performance in Internet advertisement classification with k=3 yielding the best results. The model demonstrated high accuracy of 81\% on the test set, with exceptional precision of 99.12\% for advertisement detection, indicating very few false positives. However, the recall of 75.17\% suggests some advertisements were missed. The F1-score of 85.5\% reflects a good balance between precision and recall. The model's performance decreased as k increased, confirming that k=3 provides the optimal trade-off between bias and variance for this dataset.

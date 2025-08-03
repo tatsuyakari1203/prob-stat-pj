@@ -1,52 +1,5 @@
 \section{Decision Tree Model}
 
-\subsubsection{Introduction}
-
-Decision Tree is one of the most popular and interpretable machine learning algorithms, widely used in both classification and regression problems. This algorithm creates a predictive model in the form of a tree, where each internal node represents a test condition on an attribute, each branch represents the outcome of the test condition, and each leaf node represents a classification decision.
-
-In this study, we apply the decision tree algorithm to classify Internet advertisements, aiming to determine whether a webpage contains advertisements or not based on extracted features.
-
-\subsubsection{Theoretical Foundation}
-
-\subsubsection{Decision Tree Algorithm}
-
-Decision trees operate on the "divide and conquer" principle, where the dataset is progressively divided based on test conditions until homogeneous groups are achieved or stopping criteria are met.
-
-The decision tree construction process includes the following main steps:
-\begin{enumerate}
-    \item Select the best attribute to split at the current node
-    \item Create branches for each possible value of the selected attribute
-    \item Split the dataset according to the branches
-    \item Repeat the process for each child branch until stopping criteria are satisfied
-\end{enumerate}
-
-\subsubsection{Gini Impurity Measure}
-
-To select the best attribute for splitting, we use the Gini Impurity measure. Gini Impurity measures the "impurity" level of a dataset, defined as follows:
-
-\begin{equation}
-Gini(S) = 1 - \sum_{i=1}^{c} p_i^2
-\end{equation}
-
-where:
-\begin{itemize}
-    \item $S$ is the dataset
-    \item $c$ is the number of classes
-    \item $p_i$ is the proportion of samples belonging to class $i$ in set $S$
-\end{itemize}
-
-Gini Impurity ranges from 0 to 0.5 (for binary classification problems), where 0 means the dataset is completely pure (contains only one class) and 0.5 means the dataset has an even distribution between classes.
-
-\subsubsection{Splitting Criteria}
-
-At each node, the algorithm selects the attribute and splitting threshold that minimizes the weighted Gini Impurity of the child nodes:
-
-\begin{equation}
-Gini_{weighted} = \frac{|S_{left}|}{|S|} \times Gini(S_{left}) + \frac{|S_{right}|}{|S|} \times Gini(S_{right})
-\end{equation}
-
-where $S_{left}$ and $S_{right}$ are the subsets created after splitting.
-
 \subsection{Algorithm Implementation}
 
 \subsubsection{Data Preparation}
@@ -287,8 +240,17 @@ Similar to k-NN, the decision tree model is also affected by class imbalance in 
 
 \subsection{Conclusion}
 
-The decision tree model shows good performance in Internet advertisement classification with 91.06\% accuracy. The model has advantages in high interpretability and good precision, but needs improvement in recall to minimize missing advertisements.
+The Decision Tree model achieved outstanding performance in Internet advertisement classification with 91.06\% accuracy on the test set, making it the best performing model among those tested. The model demonstrated high precision of 88.61\% and moderate recall of 46.98\% for advertisement detection, resulting in an F1-score of 61.4\%. 
 
-The tree structure shows that features X1, X11, X9, X0, and X2 play important roles in classification. Particularly, feature X1 is used as the root node with threshold 389, showing its importance in distinguishing between advertisements and non-advertisements.
+Key findings from the implementation:
+\begin{itemize}
+    \item Excellent overall accuracy (91.06\%) with strong generalization capability
+    \item High precision (88.61\%) indicates reliable advertisement detection with minimal false positives
+    \item The tree structure with max depth of 3 provides optimal balance between performance and interpretability
+    \item Features X1, X11, X9, X0, and X2 emerged as the most critical decision variables
+    \item Using only 20 selected features achieved better performance than high-dimensional approaches
+\end{itemize}
 
-In future research, techniques such as pruning could be considered to reduce overfitting, or combining with class imbalance handling methods to improve recall.
+The Decision Tree's superior accuracy combined with its interpretable structure makes it highly suitable for advertisement classification where both performance and explainability are important requirements. The tree structure reveals that feature X1 serves as the root node with threshold 389, demonstrating its critical importance in distinguishing between advertisements and non-advertisements.
+
+Future improvements could focus on addressing class imbalance through techniques such as SMOTE or cost-sensitive learning to enhance recall performance while maintaining the model's high precision.
