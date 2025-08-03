@@ -2,322 +2,302 @@
 \label{sec:objective-methodology}
 
 \subsection{Project Objective}
-The primary objective of this project is to develop and evaluate machine learning models for automatic classification of internet images as advertisements or non-advertisements. This binary classification problem addresses a significant challenge in modern digital content management, where the ability to automatically distinguish advertising content from regular content is crucial for:
+This project develops machine learning models to automatically classify internet images as advertisements or non-advertisements. This binary classification addresses the challenge of distinguishing advertising content from regular content, which is essential for:
 
 \begin{itemize}
-    \item \textbf{Content filtering}: Automatically removing or flagging advertisement content
-    \item \textbf{User experience enhancement}: Reducing intrusive advertising in web browsing
-    \item \textbf{Digital marketing analysis}: Understanding advertisement distribution patterns
-    \item \textbf{Automated content moderation}: Supporting platform content management systems
+    \item \textbf{Content filtering}: Automatically detecting advertisement content
+    \item \textbf{User experience}: Reducing intrusive advertising
+    \item \textbf{Digital analysis}: Understanding advertisement patterns
+    \item \textbf{Content moderation}: Supporting automated systems
 \end{itemize}
 
-Given the high-dimensional nature of the dataset (1,559 features) and the class imbalance observed in our exploratory analysis, this project aims to:
-
+With 1,559 features and class imbalance in our dataset, we aim to:
 \begin{enumerate}
-    \item Build robust classification models that can handle high-dimensional data
-    \item Compare the performance of different machine learning approaches
-    \item Identify the most important features for advertisement classification
-    \item Provide practical insights for real-world implementation
+    \item Build models that handle high-dimensional data effectively
+    \item Compare different machine learning approaches
+    \item Identify key features for advertisement classification
+    \item Provide practical implementation insights
 \end{enumerate}
 
-\subsection{Theoretical Framework}
-\subsubsection{Binary Classification Problem}
-Our problem can be formally defined as a supervised binary classification task. Given a training dataset $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ where $\mathbf{x}_i \in \mathbb{R}^p$ represents the feature vector of the $i$-th sample with $p = 1559$ features, and $y_i \in \{0, 1\}$ represents the class label (0 for non-advertisement, 1 for advertisement), our goal is to learn a function $f: \mathbb{R}^p \rightarrow \{0, 1\}$ that minimizes the expected classification error:
+\subsection{Theoretical Foundation}
+\subsubsection{Binary Classification Overview}
+Our task is a \textbf{binary classification problem} where we predict one of two classes: advertisement (1) or non-advertisement (0). Given input features $\mathbf{x}$ (1,559 dimensions), we want to learn a function $f(\mathbf{x}) \rightarrow \{0,1\}$ that makes accurate predictions.
 
+\textbf{Goal}: Minimize classification errors by learning patterns from training data.
+
+\subsubsection{Evaluation Metrics}
+We use multiple metrics to assess model performance, especially important for imbalanced datasets:
+
+\textbf{Accuracy}: Overall correctness
 \begin{equation}
-R(f) = \mathbb{E}[\mathbb{I}(f(\mathbf{X}) \neq Y)]
+Accuracy = \frac{\text{Correct Predictions}}{\text{Total Predictions}} = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation}
 
-where $\mathbb{I}(\cdot)$ is the indicator function and $(\mathbf{X}, Y)$ follows the same distribution as the training data.
-
-\subsubsection{Performance Evaluation Metrics}
-For binary classification problems, especially with class imbalance, we employ multiple evaluation metrics:
-
-\textbf{Accuracy:}
-\begin{equation}
-Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
-\end{equation}
-
-\textbf{Precision:}
+\textbf{Precision}: How many predicted ads are actually ads
 \begin{equation}
 Precision = \frac{TP}{TP + FP}
 \end{equation}
 
-\textbf{Recall (Sensitivity):}
+\textbf{Recall}: How many actual ads we correctly identified
 \begin{equation}
 Recall = \frac{TP}{TP + FN}
 \end{equation}
 
-\textbf{F1-Score:}
+\textbf{F1-Score}: Balance between Precision and Recall
 \begin{equation}
-F1 = 2 \cdot \frac{Precision \cdot Recall}{Precision + Recall}
+F1 = 2 \cdot \frac{Precision \times Recall}{Precision + Recall}
 \end{equation}
 
-where TP, TN, FP, FN represent True Positives, True Negatives, False Positives, and False Negatives, respectively.
+where TP=True Positives, TN=True Negatives, FP=False Positives, FN=False Negatives.
 
-\subsubsection{Bias-Variance Tradeoff}
-The performance of any learning algorithm can be decomposed into three components:
-
-\begin{equation}
-\mathbb{E}[(Y - \hat{f}(\mathbf{x}))^2] = \text{Bias}^2[\hat{f}(\mathbf{x})] + \text{Var}[\hat{f}(\mathbf{x})] + \sigma^2
-\end{equation}
-
-where:
+\subsubsection{Key Concepts}
+\textbf{Bias-Variance Tradeoff}: Every model faces a balance between:
 \begin{itemize}
-    \item \textbf{Bias}: $\text{Bias}[\hat{f}(\mathbf{x})] = \mathbb{E}[\hat{f}(\mathbf{x})] - f(\mathbf{x})$
-    \item \textbf{Variance}: $\text{Var}[\hat{f}(\mathbf{x})] = \mathbb{E}[\hat{f}(\mathbf{x})^2] - (\mathbb{E}[\hat{f}(\mathbf{x})])^2$
-    \item \textbf{Irreducible Error}: $\sigma^2$ represents the noise in the data
+    \item \textbf{Bias}: Error from oversimplifying (underfitting)
+    \item \textbf{Variance}: Error from being too sensitive to training data (overfitting)
 \end{itemize}
 
-Different algorithms handle this tradeoff differently:
-\begin{itemize}
-    \item k-NN: Low bias, high variance (especially with small k)
-    \item Decision Trees: Low bias, high variance (prone to overfitting)
-    \item Random Forest: Balanced bias-variance through ensemble averaging
-\end{itemize}
+\textbf{Cross-Validation}: We split data into k parts, train on k-1 parts, test on 1 part, repeat k times. This gives reliable performance estimates and helps select best parameters.
 
-\subsubsection{Cross-Validation}
-To ensure robust model evaluation and hyperparameter selection, we employ k-fold cross-validation:
-
-\begin{equation}
-CV_{(k)} = \frac{1}{k} \sum_{i=1}^{k} L(y_i, \hat{f}^{(-i)}(\mathbf{x}_i))
-\end{equation}
-
-where $\hat{f}^{(-i)}$ is the model trained on all folds except the $i$-th fold, and $L(\cdot, \cdot)$ is the loss function.
-
-\subsection{Statistical Methods and Approach}
-To achieve our objective, we employ three distinct machine learning approaches, each offering unique advantages for this classification problem. These methods were specifically chosen as they represent different paradigms in machine learning and were not covered in our regular coursework.
+\subsection{Machine Learning Methods}
+We employ three different approaches, each representing distinct learning paradigms:
 
 \subsubsection{k-Nearest Neighbors (k-NN)}
-The k-Nearest Neighbors algorithm is a non-parametric, instance-based learning method that classifies data points based on the majority class of their k nearest neighbors in the feature space.
+\textbf{Core Idea}: Classify new data points based on the majority class of their k closest neighbors.
 
-\textbf{Key characteristics:}
+\textbf{How it works}:
+\begin{enumerate}
+    \item Store all training data (\textbf{lazy learning})
+    \item For a new point, find k nearest neighbors using distance
+    \item Assign the most common class among these k neighbors
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\vspace{0.3cm}
+\includegraphics[width=0.5\textwidth]{graphics/knn_illustration.png}
+\vspace{0.4cm}
+\caption{k-NN Classification Example with k=3 Nearest Neighbors}
+\vspace{1cm}
+\end{figure}
+
+\textbf{Key Distance Formulas}:
 \begin{itemize}
-    \item \textbf{Non-parametric}: Makes no assumptions about the underlying data distribution \cite{cover1967nearest}
-    \item \textbf{Lazy learning}: No explicit training phase; all computation occurs during prediction
-    \item \textbf{Distance-based}: Relies on distance metrics (Euclidean, Manhattan, Minkowski) to determine similarity
-    \item \textbf{Local decision boundaries}: Creates complex, non-linear decision boundaries
-    \item \textbf{Memory-intensive}: Stores all training data for prediction, making it computationally expensive for large datasets
+    \item \textbf{Euclidean}: $d = \sqrt{\sum_{i=1}^{p} (x_i - y_i)^2}$ (straight-line distance)
+    \item \textbf{Manhattan}: $d = \sum_{i=1}^{p} |x_i - y_i|$ (city-block distance)
 \end{itemize}
 
-\textbf{Mathematical Foundation:}
-The k-NN algorithm classifies a query point $\mathbf{x}_q$ by finding the k nearest neighbors in the training set and assigning the most frequent class among these neighbors. The distance between two points $\mathbf{x}_i$ and $\mathbf{x}_j$ is typically calculated using:
-
-\textbf{Euclidean Distance:}
-\begin{equation}
-d(\mathbf{x}_i, \mathbf{x}_j) = \sqrt{\sum_{l=1}^{p} (x_{il} - x_{jl})^2}
-\end{equation}
-
-\textbf{Manhattan Distance:}
-\begin{equation}
-d(\mathbf{x}_i, \mathbf{x}_j) = \sum_{l=1}^{p} |x_{il} - x_{jl}|
-\end{equation}
-
-The classification decision is made by:
-\begin{equation}
-\hat{y} = \arg\max_{c} \sum_{i \in N_k(\mathbf{x}_q)} \mathbb{I}(y_i = c)
-\end{equation}
-where $N_k(\mathbf{x}_q)$ represents the set of k nearest neighbors of $\mathbf{x}_q$, and $\mathbb{I}(\cdot)$ is the indicator function.
-
-\textbf{Implementation considerations:}
+\textbf{Advantages}:
 \begin{itemize}
-    \item Feature normalization is crucial due to the varying scales of features
-    \item Optimal k value selection through cross-validation
-    \item Euclidean distance metric for continuous features
+    \item Simple to understand and implement
+    \item No assumptions about data distribution
+    \item Works well with sufficient training data
 \end{itemize}
 
-\textbf{Advantages for this problem:}
+\textbf{Challenges}:
 \begin{itemize}
-    \item Effective with high-dimensional data when sufficient training samples are available
-    \item No assumptions about feature distributions
-    \item Simple to understand and interpret
-    \item Can capture complex patterns in advertisement characteristics
-\end{itemize}
-
-\textbf{Disadvantages:}
-\begin{itemize}
-    \item Computationally expensive with large datasets
-    \item Sensitive to irrelevant features and local data structure
-    \item Struggles with high dimensionality (curse of dimensionality)
-    \item Potential for overfitting with small k values
+    \item Slow prediction (must check all training points)
+    \item Sensitive to irrelevant features
+    \item Struggles with high dimensions (curse of dimensionality)
 \end{itemize}
 
 \subsubsection{Decision Tree}
-Decision Trees create a hierarchical set of if-else conditions that recursively split the data based on feature values to achieve the best class separation.
+\textbf{Core Idea}: Create a tree of yes/no questions to classify data, like a flowchart.
 
-\textbf{Key characteristics:}
+\textbf{How it works}:
+\begin{enumerate}
+    \item Start with all training data at the root
+    \item Find the best feature and threshold to split data
+    \item Repeat for each branch until stopping criteria met
+    \item Make predictions by following the path from root to leaf
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\vspace{0.5cm}
+\begin{tikzpicture}[scale=1.1,
+    level 1/.style={sibling distance=5cm},
+    level 2/.style={sibling distance=2.5cm},
+    every node/.style={circle, draw, minimum size=1cm, text width=1.5cm, align=center, font=\small\bfseries, fill=cyan!20},
+    leaf/.style={rectangle, draw, minimum size=1cm, text width=1.5cm, align=center, font=\small\bfseries, fill=lime!30, rounded corners=3pt},
+    edge from parent/.style={draw, thick}
+]
+    \node {Feature A\\> 0.5?}
+        child {
+            node {Feature B\\> 0.3?}
+            child {
+                node[leaf] {Non-Ad\\(85\%)}
+                edge from parent node[left, font=\small] {No}
+            }
+            child {
+                node[leaf] {Ad\\(92\%)}
+                edge from parent node[right, font=\small] {Yes}
+            }
+            edge from parent node[left, font=\small] {No}
+        }
+        child {
+            node[leaf] {Ad\\(78\%)}
+            edge from parent node[right, font=\small] {Yes}
+        };
+\end{tikzpicture}
+\vspace{0.3cm}
+\caption{Decision Tree Example for Ad Classification}
+\vspace{1cm}
+\end{figure}
+
+\textbf{Key Concepts}:
 \begin{itemize}
-    \item \textbf{Interpretable}: Provides clear, human-readable decision rules \cite{quinlan1993c4}
-    \item \textbf{Non-linear}: Can capture complex interactions between features
-    \item \textbf{Feature selection}: Automatically identifies the most discriminative features
-    \item \textbf{Handles mixed data types}: Works with both numerical and categorical features
-    \item \textbf{White box model}: Decision process is completely transparent and explainable
+    \item \textbf{Gini Impurity}: Measures how "mixed" classes are in a node
+    \begin{equation}
+    Gini = 1 - \sum_{i=1}^{c} p_i^2
+    \end{equation}
+    \item \textbf{Information Gain}: How much a split reduces uncertainty
+    \item \textbf{Pruning}: Removing branches to prevent overfitting
 \end{itemize}
 
-\textbf{Mathematical Foundation:}
-Decision trees recursively partition the feature space by selecting the best split at each node. The quality of a split is measured using impurity criteria:
-
-\textbf{Gini Impurity:}
-\begin{equation}
-Gini(S) = 1 - \sum_{i=1}^{c} p_i^2
-\end{equation}
-where $p_i$ is the proportion of samples belonging to class $i$ in set $S$.
-
-\textbf{Information Gain (Entropy):}
-\begin{equation}
-Entropy(S) = -\sum_{i=1}^{c} p_i \log_2(p_i)
-\end{equation}
-
-\textbf{Information Gain:}
-\begin{equation}
-IG(S, A) = Entropy(S) - \sum_{v \in Values(A)} \frac{|S_v|}{|S|} Entropy(S_v)
-\end{equation}
-where $A$ is an attribute and $S_v$ is the subset of $S$ for which attribute $A$ has value $v$.
-
-The best split is chosen as:
-\begin{equation}
-A^* = \arg\max_{A} IG(S, A)
-\end{equation}
-
-\textbf{Implementation approach:}
+\textbf{Advantages}:
 \begin{itemize}
-    \item Use of information gain or Gini impurity for split criteria
-    \item Pruning techniques to prevent overfitting
-    \item Feature subset selection to improve interpretability
-\end{itemize}
-
-\textbf{Advantages for this problem:}
-\begin{itemize}
-    \item Provides interpretable rules for advertisement classification
-    \item Handles feature interactions naturally
-    \item Robust to outliers and missing values
+    \item Easy to understand and interpret (white box)
+    \item Handles both numerical and categorical features
     \item No need for feature scaling
-    \item Requires little data preparation
+    \item Automatically selects important features
 \end{itemize}
 
-\textbf{Disadvantages:}
+\textbf{Challenges}:
 \begin{itemize}
-    \item Prone to overfitting, especially with complex trees
-    \item Unstable - small changes in data can result in very different trees
-    \item Difficulty with certain concepts like XOR problems
-    \item Can create overly complex trees that do not generalize well
+    \item Prone to overfitting (memorizing training data)
+    \item Unstable (small data changes = different trees)
+    \item Can create overly complex rules
 \end{itemize}
 
 \subsubsection{Random Forest}
-Random Forest is an ensemble method that combines multiple decision trees using bootstrap aggregating (bagging) and random feature selection to improve prediction accuracy and reduce overfitting.
+\textbf{Core Idea}: Combine many decision trees to make better predictions (\textbf{ensemble method}).
 
-\textbf{Key characteristics:}
+\textbf{How it works}:
+\begin{enumerate}
+    \item Create many different training datasets using \textbf{bootstrap sampling} (random sampling with replacement)
+    \item Train one decision tree on each dataset
+    \item For each tree, use only a random subset of features at each split
+    \item Combine all tree predictions by \textbf{majority voting}
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\vspace{0.5cm}
+\begin{tikzpicture}[scale=0.9]
+    % Original dataset
+    \node[draw, rectangle, minimum width=2.5cm, minimum height=1.2cm, text width=2.3cm, align=center, font=\small\bfseries, fill=gray!20, rounded corners=5pt] at (0,5) {Original\\Dataset};
+    
+    % Bootstrap samples with better spacing
+    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=blue!30, rounded corners=3pt] at (-4,3) {Bootstrap\\Sample 1};
+    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=green!30, rounded corners=3pt] at (0,3) {Bootstrap\\Sample 2};
+    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=red!30, rounded corners=3pt] at (4,3) {Bootstrap\\Sample 3};
+    
+    % Decision Trees with better styling
+    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=blue!40] at (-4,1) {Tree 1};
+    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=green!40] at (0,1) {Tree 2};
+    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=red!40] at (4,1) {Tree 3};
+    
+    % Individual predictions with boxes
+    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=blue!20, rounded corners=2pt] at (-4,-0.5) {Ad};
+    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=green!20, rounded corners=2pt] at (0,-0.5) {Non-Ad};
+    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=red!20, rounded corners=2pt] at (4,-0.5) {Ad};
+    
+    % Final prediction with emphasis
+    \node[draw, rectangle, minimum width=3cm, minimum height=1cm, fill=yellow!40, text width=2.8cm, align=center, font=\small\bfseries, rounded corners=5pt, thick] at (0,-2.5) {Final Prediction:\\Ad (2/3 votes)};
+    
+    % Improved arrows
+    \draw[->, thick, blue] (0,4.4) -- (-4,3.6);
+    \draw[->, thick, green] (0,4.4) -- (0,3.6);
+    \draw[->, thick, red] (0,4.4) -- (4,3.6);
+    
+    \draw[->, thick, blue] (-4,2.4) -- (-4,1.6);
+    \draw[->, thick, green] (0,2.4) -- (0,1.6);
+    \draw[->, thick, red] (4,2.4) -- (4,1.6);
+    
+    \draw[->, thick, blue] (-4,0.4) -- (-4,-0.1);
+    \draw[->, thick, green] (0,0.4) -- (0,-0.1);
+    \draw[->, thick, red] (4,0.4) -- (4,-0.1);
+    
+    % Voting arrows
+    \draw[->, thick, orange] (-4,-0.9) -- (-1.5,-2);
+    \draw[->, thick, orange] (0,-0.9) -- (0,-2);
+    \draw[->, thick, orange] (4,-0.9) -- (1.5,-2);
+    
+    % Process labels
+    \node[font=\small\bfseries, color=blue] at (-2,4) {Bootstrap};
+    \node[font=\small\bfseries, color=blue] at (2,4) {Sampling};
+    \node[font=\small\bfseries, color=orange] at (0,-1.5) {Majority Voting};
+\end{tikzpicture}
+\vspace{0.3cm}
+\caption{Random Forest: Ensemble of Decision Trees}
+\vspace{1cm}
+\end{figure}
+
+\textbf{Key Features}:
 \begin{itemize}
-    \item \textbf{Ensemble method}: Combines predictions from multiple decision trees using bagging \cite{breiman2001random}
-    \item \textbf{Bootstrap sampling}: Each tree is trained on a random subset of the data with replacement
-    \item \textbf{Random feature selection}: Each split considers only a random subset of features (feature bagging)
-    \item \textbf{Variance reduction}: Reduces overfitting compared to single decision trees
-    \item \textbf{Versatile}: Can be used for both classification and regression tasks \cite{builtin2024random}
+    \item \textbf{Bootstrap Sampling}: Each tree sees different data
+    \item \textbf{Feature Randomness}: Each split uses random feature subset
+    \item \textbf{Majority Voting}: Final prediction = most common prediction
+    \item \textbf{Out-of-Bag Error}: Built-in validation using unused samples
 \end{itemize}
 
-\textbf{Mathematical Foundation:}
-Random Forest combines $B$ decision trees trained on bootstrap samples with random feature selection. For classification, the final prediction is:
-
-\textbf{Majority Voting:}
-\begin{equation}
-\hat{y} = \arg\max_{c} \sum_{b=1}^{B} \mathbb{I}(\hat{y}_b = c)
-\end{equation}
-where $\hat{y}_b$ is the prediction of the $b$-th tree.
-
-\textbf{Bootstrap Sampling:}
-Each tree is trained on a bootstrap sample $S_b$ of size $n$ drawn with replacement from the original training set.
-
-\textbf{Random Feature Selection:}
-At each split, only $m = \sqrt{p}$ features are randomly selected from the total $p$ features, where $p$ is the total number of features.
-
-\textbf{Out-of-Bag (OOB) Error:}
-For each observation $i$, the OOB prediction uses only trees where $i$ was not in the bootstrap sample:
-\begin{equation}
-\hat{y}_i^{OOB} = \arg\max_{c} \sum_{b: i \notin S_b} \mathbb{I}(\hat{y}_b(\mathbf{x}_i) = c)
-\end{equation}
-
-\textbf{Feature Importance:}
-\begin{equation}
-VI_j = \frac{1}{B} \sum_{b=1}^{B} \sum_{t \in T_b} \mathbb{I}(v(t) = j) \cdot p(t) \cdot \Delta_t
-\end{equation}
-where $v(t)$ is the variable used at node $t$, $p(t)$ is the proportion of samples reaching node $t$, and $\Delta_t$ is the impurity decrease at node $t$.
-
-\textbf{Implementation strategy:}
+\textbf{Why it works better}:
 \begin{itemize}
-    \item Optimal number of trees (ntree) selection
-    \item Tuning of mtry parameter (number of features considered at each split)
-    \item Feature importance analysis
-    \item Out-of-bag error estimation
+    \item Individual trees may overfit, but averaging reduces this
+    \item Different trees make different mistakes
+    \item Combines strengths while canceling weaknesses
 \end{itemize}
 
-\textbf{Advantages for this problem:}
+\textbf{Advantages}:
 \begin{itemize}
-    \item Excellent performance with high-dimensional data \cite{geeksforgeeks2025random}
-    \item Provides feature importance rankings automatically
-    \item Robust to overfitting due to ensemble averaging
-    \item Handles class imbalance better than single trees
-    \item No need for extensive hyperparameter tuning
-    \item Robust to noise and outliers \cite{geeksforgeeks2025advantages}
-    \item Handles missing data effectively
+    \item Excellent performance with high-dimensional data
+    \item Provides feature importance automatically
+    \item Robust to overfitting
+    \item Handles missing data well
+    \item Less parameter tuning needed
 \end{itemize}
 
-\textbf{Disadvantages:}
+\textbf{Challenges}:
 \begin{itemize}
-    \item Less interpretable than single decision trees
-    \item Can be computationally expensive with many trees
+    \item Less interpretable than single trees (black box)
+    \item Computationally expensive with many trees
     \item Memory intensive for large datasets
-    \item May overfit with very noisy data despite ensemble nature \cite{ibm2024random}
 \end{itemize}
 
-\subsection{Methodology Framework}
-Our analytical approach follows a systematic methodology:
+\subsection{Our Approach}
+We follow a systematic process:
 
 \begin{enumerate}
-    \item \textbf{Data Preprocessing}: 
+    \item \textbf{Data Preparation}: 
     \begin{itemize}
-        \item Feature normalization for k-NN
-        \item Train-test split (70-30 ratio)
-        \item Handling of class imbalance
+        \item Normalize features (important for k-NN)
+        \item Split data: 70\% training, 30\% testing
+        \item Handle class imbalance
     \end{itemize}
     
     \item \textbf{Model Training}:
     \begin{itemize}
-        \item k-NN: Cross-validation for optimal k selection
-        \item Decision Tree: Pruning for optimal complexity
-        \item Random Forest: Parameter tuning for ntree and mtry
+        \item k-NN: Find best k value using cross-validation
+        \item Decision Tree: Use pruning to prevent overfitting
+        \item Random Forest: Tune number of trees and features per split
     \end{itemize}
     
-    \item \textbf{Model Evaluation}:
+    \item \textbf{Evaluation}:
     \begin{itemize}
-        \item Accuracy, Precision, Recall, and F1-score
-        \item Confusion matrices for detailed performance analysis
-        \item ROC curves and AUC for threshold-independent evaluation
-    \end{itemize}
-    
-    \item \textbf{Feature Analysis}:
-    \begin{itemize}
-        \item Feature importance from Random Forest
-        \item Decision rules from Decision Tree
-        \item Distance analysis from k-NN
-    \end{itemize}
-    
-    \item \textbf{Model Comparison}:
-    \begin{itemize}
-        \item Comparative performance analysis
-        \item Computational efficiency assessment
-        \item Interpretability evaluation
+        \item Compare using Accuracy, Precision, Recall, F1-score
+        \item Analyze confusion matrices
+        \item Examine feature importance (from Random Forest)
     \end{itemize}
 \end{enumerate}
 
-\subsection{Expected Outcomes}
-Through this comprehensive analysis, we expect to:
-
+\subsection{Expected Results}
+This study will:
 \begin{itemize}
-    \item Identify the most effective machine learning approach for advertisement classification
-    \item Discover the most important features that distinguish advertisements from non-advertisements
-    \item Provide practical recommendations for implementing advertisement detection systems
-    \item Demonstrate the effectiveness of ensemble methods (Random Forest) for high-dimensional classification problems
-    \item Contribute insights into the application of machine learning in digital content analysis
+    \item Identify the best method for ad classification
+    \item Discover which features are most important for detecting ads
+    \item Provide practical recommendations for real-world systems
+    \item Show how ensemble methods handle high-dimensional data
 \end{itemize}
 
-This multi-method approach ensures a thorough evaluation of different machine learning paradigms and provides robust conclusions about the most suitable techniques for internet advertisement classification.
+By comparing three different approaches, we ensure robust conclusions about the most effective techniques for internet advertisement classification.
