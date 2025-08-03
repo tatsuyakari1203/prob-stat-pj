@@ -1,0 +1,13 @@
+"Model","Actual","Predicted","Count"
+"kNN","ad","ad",112
+"kNN","ad","nonad",37
+"kNN","nonad","ad",1
+"kNN","nonad","nonad",50
+"Decision_Tree","ad","ad",70
+"Decision_Tree","ad","nonad",79
+"Decision_Tree","nonad","ad",9
+"Decision_Tree","nonad","nonad",826
+"Random_Forest","ad","ad",57
+"Random_Forest","ad","nonad",92
+"Random_Forest","nonad","ad",0
+"Random_Forest","nonad","nonad",835

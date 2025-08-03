@@ -1,0 +1,57 @@
+=== DATA CLEANING AND PREPROCESSING ===
+Removing index column...
+New dimensions: 3279 rows x 1559 columns
+
+--- HANDLING MISSING VALUES ---
+Total missing values before cleaning: 15 
+Warning messages:
+1: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+2: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+3: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+Columns with missing values:
+Column 1 : 903 missing values
+Column 2 : 901 missing values
+Column 3 : 910 missing values
+Column 4 : 15 missing values
+
+Imputing missing values with median...
+Column 1 - imputed with median: 51 
+Column 2 - imputed with median: 110 
+Column 3 - imputed with median: 2.102 
+Column 4 - imputed with median: 1 
+
+Missing values after imputation: 0 
+
+--- CLEANING TARGET VARIABLE ---
+Target variable unique values: ad. nonad. 
+Cleaned target levels: ad nonad 
+
+--- FINAL DATASET SUMMARY ---
+Final dimensions: 3279 rows x 1559 columns
+Target distribution:
+
+   ad nonad 
+  459  2820 
+Proportions:
+
+   ad nonad 
+ 0.14  0.86 
+
+--- FEATURE STATISTICS (First 5 features) ---
+Feature 1 - Min: 1 | Max: 640 | Mean: 60.44 | SD: 47.06 
+Feature 2 - Min: 1 | Max: 640 | Mean: 142.89 | SD: 112.56 
+Feature 3 - Min: 0 | Max: 60 | Mean: 3.41 | SD: 5.2 
+Feature 4 - Min: 0 | Max: 1 | Mean: 0.77 | SD: 0.42 
+Feature 5 - Min: 0 | Max: 1 | Mean: 0 | SD: 0.07 
+
+=== DATA CLEANING COMPLETED ===
+
+--- EXPORTING DATA CLEANING SUMMARY ---
+Dataset overview exported to dataset_overview.csv
+Target distribution exported to target_distribution.csv
+Feature statistics exported to feature_statistics.csv
+Data cleaning steps exported to data_cleaning_steps.csv
+Cleaned data saved to data_cleaned.RData

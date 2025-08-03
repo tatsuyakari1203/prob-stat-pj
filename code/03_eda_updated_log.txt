@@ -1,0 +1,94 @@
+=== EXPLORATORY DATA ANALYSIS ===
+
+--- TARGET VARIABLE ANALYSIS ---
+Class distribution:
+
+   ad nonad 
+  459  2820 
+Proportions:
+
+   ad nonad 
+ 0.14  0.86 
+null device 
+          1 
+Target distribution plot saved to ../graphics/target_distribution.png
+
+--- DESCRIPTIVE STATISTICS ---
+Summary statistics for first 10 features:
+Feature 1: Min=1.00, Q1=32.50, Median=51.00, Mean=60.44, Q3=61.00, Max=640.00, SD=47.06
+Feature 2: Min=1.00, Q1=90.00, Median=110.00, Mean=142.89, Q3=144.00, Max=640.00, SD=112.56
+Feature 3: Min=0.00, Q1=1.28, Median=2.10, Mean=3.41, Q3=3.90, Max=60.00, SD=5.20
+Feature 4: Min=0.00, Q1=1.00, Median=1.00, Mean=0.77, Q3=1.00, Max=1.00, SD=0.42
+Feature 5: Min=0.00, Q1=0.00, Median=0.00, Mean=0.00, Q3=0.00, Max=1.00, SD=0.07
+Feature 6: Min=0.00, Q1=0.00, Median=0.00, Mean=0.01, Q3=0.00, Max=1.00, SD=0.11
+Feature 7: Min=0.00, Q1=0.00, Median=0.00, Mean=0.00, Q3=0.00, Max=1.00, SD=0.07
+Feature 8: Min=0.00, Q1=0.00, Median=0.00, Mean=0.00, Q3=0.00, Max=1.00, SD=0.06
+Feature 9: Min=0.00, Q1=0.00, Median=0.00, Mean=0.00, Q3=0.00, Max=1.00, SD=0.06
+Feature 10: Min=0.00, Q1=0.00, Median=0.00, Mean=0.01, Q3=0.00, Max=1.00, SD=0.11
+
+--- CREATING HISTOGRAMS ---
+null device 
+          1 
+Histograms saved to ../graphics/histograms.png
+
+--- CREATING BOXPLOTS ---
+null device 
+          1 
+Boxplots saved to ../graphics/boxplots.png
+
+--- CREATING SCATTER PLOTS ---
+Warning messages:
+1: In plot.window(...) : "alpha" is not a graphical parameter
+2: In plot.xy(xy, type, ...) : "alpha" is not a graphical parameter
+3: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+4: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+5: In box(...) : "alpha" is not a graphical parameter
+6: In title(...) : "alpha" is not a graphical parameter
+Warning messages:
+1: In plot.window(...) : "alpha" is not a graphical parameter
+2: In plot.xy(xy, type, ...) : "alpha" is not a graphical parameter
+3: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+4: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+5: In box(...) : "alpha" is not a graphical parameter
+6: In title(...) : "alpha" is not a graphical parameter
+Warning messages:
+1: In plot.window(...) : "alpha" is not a graphical parameter
+2: In plot.xy(xy, type, ...) : "alpha" is not a graphical parameter
+3: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+4: In axis(side = side, at = at, labels = labels, ...) :
+  "alpha" is not a graphical parameter
+5: In box(...) : "alpha" is not a graphical parameter
+6: In title(...) : "alpha" is not a graphical parameter
+null device 
+          1 
+Scatter plots saved to ../graphics/scatterplots.png
+
+--- CORRELATION ANALYSIS ---
+Correlation matrix (first 10 features):
+       X0     X1     X2     X3     X4     X5     X6     X7     X8     X9
+X0  1.000  0.198 -0.260 -0.165 -0.018 -0.022 -0.067 -0.018 -0.044 -0.006
+X1  0.198  1.000  0.549 -0.027 -0.032 -0.032 -0.050 -0.024 -0.049  0.146
+X2 -0.260  0.549  1.000  0.088 -0.020 -0.027  0.012 -0.015 -0.012  0.067
+X3 -0.165 -0.027  0.088  1.000  0.036  0.019  0.037  0.032  0.035  0.046
+X4 -0.018 -0.032 -0.020  0.036  1.000 -0.007 -0.004 -0.004 -0.004 -0.007
+X5 -0.022 -0.032 -0.027  0.019 -0.007  1.000 -0.007 -0.006 -0.007 -0.012
+X6 -0.067 -0.050  0.012  0.037 -0.004 -0.007  1.000 -0.004 -0.004 -0.007
+X7 -0.018 -0.024 -0.015  0.032 -0.004 -0.006 -0.004  1.000 -0.004 -0.006
+X8 -0.044 -0.049 -0.012  0.035 -0.004 -0.007 -0.004 -0.004  1.000 -0.007
+X9 -0.006  0.146  0.067  0.046 -0.007 -0.012 -0.007 -0.006 -0.007  1.000
+
+No highly correlated feature pairs found (|r| > 0.7)
+
+=== EDA COMPLETED ===
+All plots saved to ../graphics/ directory
+
+--- EXPORTING EDA SUMMARY ---
+Comprehensive feature statistics exported to comprehensive_feature_statistics.csv
+Correlation analysis summary exported to correlation_analysis_summary.csv
+Data distribution summary exported to data_distribution_summary.csv
+Visualizations summary exported to visualizations_summary.csv

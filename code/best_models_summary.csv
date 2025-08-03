@@ -1,0 +1,6 @@
+"Metric","Best_Model","Best_Value"
+"Accuracy","Decision Tree",0.9106
+"Precision","Random Forest",1
+"Recall","k-NN (k=3)",0.7517
+"F1_Score","k-NN (k=3)",0.855
+"Overall","k-NN (k=3)",0.855
