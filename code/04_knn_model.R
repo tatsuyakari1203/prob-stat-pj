@@ -114,7 +114,7 @@ cat("Best accuracy:", round(best_accuracy, 4), "\n")
 
 # Plot k-value tuning results
 cat("\n--- GENERATING k-NN PLOTS ---\n")
-png("../graphics/knn_k_tuning.png", width = 800, height = 600)
+png("../graphics/04-knn-k_tuning.png", width = 800, height = 600)
 plot(results$k, results$accuracy, 
      type = "b", pch = 19, col = "blue", lwd = 2,
      xlab = "k Value", ylab = "Accuracy", 
@@ -126,7 +126,7 @@ points(best_k, best_accuracy, col = "red", pch = 19, cex = 2)
 text(best_k, best_accuracy + 0.005, paste("Best k =", best_k), 
      col = "red", pos = 3, font = 2)
 dev.off()
-cat("k-value tuning plot saved to ../graphics/knn_k_tuning.png\n")
+cat("k-value tuning plot saved to ../graphics/04-knn-k_tuning.png\n")
 
 # Final model with best k on larger test set
 cat("\n--- FINAL MODEL EVALUATION ---\n")

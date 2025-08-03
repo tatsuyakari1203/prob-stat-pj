@@ -76,7 +76,7 @@ cat("Best F1-Score:", best_f1, "(", round(max(f1_scores), 4), ")\n")
 cat("\n--- GENERATING COMPARISON PLOTS ---\n")
 
 # Performance metrics comparison
-png("../graphics/model_performance_comparison.png", width = 1000, height = 600)
+png("../graphics/07-comparison-model_performance_comparison.png", width = 1000, height = 600)
 par(mfrow = c(2, 2), mar = c(8, 5, 4, 2))
 
 # Accuracy comparison
@@ -100,10 +100,10 @@ barplot(comparison_df$F1_Score, names.arg = model_names,
         col = c("lightblue", "lightcoral", "lightgreen"), las = 2)
 
 dev.off()
-cat("Performance comparison plot saved to ../graphics/model_performance_comparison.png\n")
+cat("Performance comparison plot saved to ../graphics/07-comparison-model_performance_comparison.png\n")
 
 # Combined confusion matrices visualization
-png("../graphics/all_confusion_matrices.png", width = 1200, height = 400)
+png("../graphics/07-comparison-all_confusion_matrices.png", width = 1200, height = 400)
 par(mfrow = c(1, 3), mar = c(5, 5, 4, 2))
 
 # k-NN confusion matrix

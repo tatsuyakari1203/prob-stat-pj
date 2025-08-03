@@ -165,7 +165,7 @@ predict_single_tree <- function(tree, data) {
 }
 
 # Build Random Forest
-n_trees <- 50  # Number of trees in forest
+n_trees <- 100  # Number of trees in forest
 m_features <- floor(sqrt(ncol(train_data) - 1))  # Number of features to consider at each split
 
 cat("Building Random Forest with", n_trees, "trees...\n")
@@ -254,7 +254,7 @@ cat("F1-score (ad):", round(f1_ad, 4), "\n")
 cat("\n--- GENERATING RANDOM FOREST PLOTS ---\n")
 
 # Plot confusion matrix
-png("../graphics/rf_confusion_matrix.png", width = 600, height = 600)
+png("../graphics/06-rf-confusion_matrix.png", width = 600, height = 600)
 par(mar = c(5, 5, 4, 2))
 image(1:2, 1:2, as.matrix(confusion_matrix), 
       col = c("lightblue", "lightcoral", "orange", "lightgreen"),
@@ -270,7 +270,7 @@ for(i in 1:2) {
   }
 }
 dev.off()
-cat("Confusion matrix plot saved to ../graphics/rf_confusion_matrix.png\n")
+cat("Confusion matrix plot saved to ../graphics/06-rf-confusion_matrix.png\n")
 
 # Feature importance (simplified)
 cat("\n--- FEATURE IMPORTANCE ---\n")
@@ -299,7 +299,7 @@ cat("Top 10 most important features:\n")
 print(head(feature_importance, 10))
 
 # Plot feature importance
-png("../graphics/rf_feature_importance.png", width = 800, height = 600)
+png("../graphics/06-rf-feature_importance.png", width = 800, height = 600)
 par(mar = c(8, 5, 4, 2))
 top_features <- head(feature_importance, 10)
 barplot(top_features, 
@@ -308,7 +308,7 @@ barplot(top_features,
         col = "darkgreen",
         las = 2)
 dev.off()
-cat("Feature importance plot saved to ../graphics/rf_feature_importance.png\n")
+cat("Feature importance plot saved to ../graphics/06-rf-feature_importance.png\n")
 
 cat("\n=== RANDOM FOREST MODEL COMPLETED ===\n")
 

@@ -1,0 +1,25 @@
+# R files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# LaTeX files
+*.aux
+*.log
+*.lof
+*.lol
+*.lot
+*.out
+*.toc
+*.pyg
+
+# Generated data and graphics
+code/*.RData
+code/*.csv
+code/*.txt
+graphics/*.png
+graphics/*.pdf
+
+# Other
+.crush/

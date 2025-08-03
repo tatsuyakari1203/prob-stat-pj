@@ -3,24 +3,42 @@
 # Data Loading and Initial Exploration
 # =============================================================================
 
-# Clear environment
+# --- SETUP ---
+# Clear environment to ensure a clean state
 rm(list = ls())
+
+
+# --- CORE LOGIC: DATA LOADING ---
+# This section contains the essential code for loading the dataset and saving it.
+# This is the primary logic you would feature in a report.
+
+# Load the dataset from the CSV file
+data <- read.csv("../add.csv", header = TRUE, stringsAsFactors = FALSE)
+
+# Identify the target column name
+target_col <- names(data)[ncol(data)]
+
+# Save the loaded data and target column name for faster access in subsequent scripts
+save(data, target_col, file = "data_loaded.RData")
+
+
+# --- SUPPLEMENTARY: LOGGING & INITIAL EXPLORATION ---
+# This section contains code for printing progress and summary statistics to the
+# console. This is useful for development and debugging but is not part of the
+# core data processing pipeline.
 
 cat("=== DATA LOADING AND INITIAL EXPLORATION ===\n")
 
-# Load the dataset using base R
 cat("Loading dataset...\n")
-data <- read.csv("../add.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # Basic information about the dataset
 cat("\n--- DATASET OVERVIEW ---\n")
 cat("Dataset dimensions:", nrow(data), "rows x", ncol(data), "columns\n")
 cat("Column names (first 10):", paste(names(data)[1:10], collapse = ", "), "...\n")
-cat("Target variable:", names(data)[ncol(data)], "\n")
+cat("Target variable:", target_col, "\n")
 
 # Check the target variable distribution
 cat("\n--- TARGET VARIABLE DISTRIBUTION ---\n")
-target_col <- names(data)[ncol(data)]
 target_counts <- table(data[[target_col]])
 print(target_counts)
 cat("Proportions:\n")
@@ -42,11 +60,6 @@ for(i in 1:min(20, ncol(data))) {
 
 # Basic statistics for first few numeric columns
 cat("\n--- BASIC STATISTICS (First 5 numeric columns) ---\n")
-numeric_cols <- sapply(data[1:5], function(x) {
-  # Convert to numeric, treating "?" as NA
-  as.numeric(ifelse(x == "?", NA, x))
-})
-
 for(i in 1:5) {
   col_data <- as.numeric(ifelse(data[[i]] == "?", NA, data[[i]]))
   if(sum(!is.na(col_data)) > 0) {
@@ -57,7 +70,4 @@ for(i in 1:5) {
 }
 
 cat("\n=== DATA LOADING COMPLETED ===\n")
-
-# Save basic info for next steps
-save(data, target_col, file = "data_loaded.RData")
 cat("Data saved to data_loaded.RData\n")

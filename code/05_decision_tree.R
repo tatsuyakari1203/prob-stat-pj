@@ -189,7 +189,7 @@ cat("F1-score (ad):", round(f1_ad, 4), "\n")
 cat("\n--- GENERATING DECISION TREE PLOTS ---\n")
 
 # Plot confusion matrix
-png("../graphics/dt_confusion_matrix.png", width = 600, height = 600)
+png("../graphics/05-dt-confusion_matrix.png", width = 600, height = 600)
 par(mar = c(5, 5, 4, 2))
 image(1:2, 1:2, as.matrix(confusion_matrix), 
       col = c("lightblue", "lightcoral", "orange", "lightgreen"),
@@ -205,7 +205,7 @@ for(i in 1:2) {
   }
 }
 dev.off()
-cat("Confusion matrix plot saved to ../graphics/dt_confusion_matrix.png\n")
+cat("Confusion matrix plot saved to ../graphics/05-dt-confusion_matrix.png\n")
 
 # Plot feature importance (based on splits)
 feature_importance <- rep(0, ncol(X))
@@ -219,7 +219,7 @@ if(exists("tree_model") && !is.null(tree_model)) {
 }
 # Plot top 10 features
 top_features <- sort(feature_importance, decreasing = TRUE)[1:10]
-png("../graphics/dt_feature_importance.png", width = 800, height = 600)
+png("../graphics/05-dt-feature_importance.png", width = 800, height = 600)
 par(mar = c(8, 5, 4, 2))
 barplot(top_features, 
         main = "Decision Tree - Top 10 Feature Importance",
@@ -227,7 +227,7 @@ barplot(top_features,
         col = "steelblue",
         las = 2)
 dev.off()
-cat("Feature importance plot saved to ../graphics/dt_feature_importance.png\n")
+cat("Feature importance plot saved to ../graphics/05-dt-feature_importance.png\n")
 
 # Print tree structure (simplified)
 cat("\n--- DECISION TREE STRUCTURE ---\n")
