@@ -1,0 +1,38 @@
+=== DATA LOADING AND INITIAL EXPLORATION ===
+Loading dataset...
+
+--- DATASET OVERVIEW ---
+Dataset dimensions: 3279 rows x 1560 columns
+Column names (first 10): X, X0, X1, X2, X3, X4, X5, X6, X7, X8 ...
+Target variable: X1558 
+
+--- TARGET VARIABLE DISTRIBUTION ---
+
+   ad. nonad. 
+   459   2820 
+Proportions:
+
+   ad. nonad. 
+  0.14   0.86 
+
+--- MISSING VALUES CHECK ---
+Total '?' values in dataset: 15 
+Missing values in first 20 columns:
+Column 5 : 15 missing values
+
+--- BASIC STATISTICS (First 5 numeric columns) ---
+Column 1 - Mean: 1639 | Median: 1639 | SD: 946.71 
+Column 2 - Mean: 64.02 | Median: 51 | SD: 54.87 
+Column 3 - Mean: 155.34 | Median: 110 | SD: 130.03 
+Column 4 - Mean: 3.91 | Median: 2.1 | SD: 6.04 
+Column 5 - Mean: 0.77 | Median: 1 | SD: 0.42 
+Warning messages:
+1: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+2: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+3: In as.numeric(ifelse(data[[i]] == "?", NA, data[[i]])) :
+  NAs introduced by coercion
+
+=== DATA LOADING COMPLETED ===
+Data saved to data_loaded.RData

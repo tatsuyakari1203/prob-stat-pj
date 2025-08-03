@@ -1,0 +1,69 @@
+=== RANDOM FOREST MODEL ===
+
+--- DATA PREPARATION ---
+Feature matrix dimensions: 3279 x 1558 
+Target variable levels: ad nonad 
+Class distribution:
+y
+   ad nonad 
+  459  2820 
+
+--- TRAIN-TEST SPLIT ---
+Training set size: 2295 
+Test set size: 984 
+Training set class distribution:
+
+   ad nonad 
+  310  1985 
+Test set class distribution:
+
+   ad nonad 
+  149   835 
+
+--- RANDOM FOREST TRAINING ---
+Building Random Forest with 100 trees...
+Features per split: 39 
+Building tree 10 / 100 
+Building tree 20 / 100 
+Building tree 30 / 100 
+Building tree 40 / 100 
+Building tree 50 / 100 
+Building tree 60 / 100 
+Building tree 70 / 100 
+Building tree 80 / 100 
+Building tree 90 / 100 
+Building tree 100 / 100 
+Random Forest training completed!
+
+--- RANDOM FOREST PREDICTIONS ---
+Training accuracy: 0.9229 
+Test accuracy: 0.9065 
+
+Confusion Matrix:
+         Actual
+Predicted  ad nonad
+    ad     57     0
+    nonad  92   835
+
+Performance Metrics:
+Accuracy: 0.9065 
+Precision (ad): 1 
+Recall (ad): 0.3826 
+F1-score (ad): 0.5534 
+
+--- GENERATING RANDOM FOREST PLOTS ---
+null device 
+          1 
+Confusion matrix plot saved to ../graphics/06-rf-confusion_matrix.png
+
+--- FEATURE IMPORTANCE ---
+Top 10 most important features:
+feature_usage
+   X2 X1243    X1  X351 X1455 X1483 X1229 X1399    X0  X968 
+   19    18    17    16    15    15    14    13    12    12 
+null device 
+          1 
+Feature importance plot saved to ../graphics/06-rf-feature_importance.png
+
+=== RANDOM FOREST MODEL COMPLETED ===
+Random Forest results saved to random_forest_results.RData

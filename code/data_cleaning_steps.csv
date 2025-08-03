@@ -1,0 +1,5 @@
+"Step","Description"
+"Remove Index Column","Removed the first column which was a row index"
+"Handle Missing Values","Converted '?' strings to NA values"
+"Impute with Median","Replaced all NA values in numeric columns with the column median"
+"Clean Target Variable","Converted the target variable to a factor with levels 'ad' and 'nonad'"

@@ -1,0 +1,80 @@
+=== k-NEAREST NEIGHBORS MODEL ===
+
+--- DATA PREPARATION ---
+Feature matrix dimensions: 3279 x 1558 
+Target variable levels: ad nonad 
+Class distribution:
+y
+   ad nonad 
+  459  2820 
+
+--- FEATURE NORMALIZATION ---
+Features normalized using z-score standardization
+Sample means after normalization (should be ~0): 0 0 0 0 0 
+Sample SDs after normalization (should be ~1): 1 1 1 1 1 
+
+--- TRAIN-TEST SPLIT ---
+Training set size: 2295 
+Test set size: 984 
+Training set class distribution:
+y_train
+   ad nonad 
+  310  1985 
+Test set class distribution:
+y_test
+   ad nonad 
+  149   835 
+
+--- k-NN MODEL TRAINING AND PREDICTION ---
+Testing k values: 3 5 7 9 11 
+
+Testing k = 3 ...
+k = 3 - Accuracy: 0.9 
+
+Testing k = 5 ...
+k = 5 - Accuracy: 0.81 
+
+Testing k = 7 ...
+k = 7 - Accuracy: 0.74 
+
+Testing k = 9 ...
+k = 9 - Accuracy: 0.72 
+
+Testing k = 11 ...
+k = 11 - Accuracy: 0.7 
+
+--- k-NN RESULTS SUMMARY ---
+Results for different k values:
+   k accuracy
+1  3     0.90
+2  5     0.81
+3  7     0.74
+4  9     0.72
+5 11     0.70
+
+Best k value: 3 
+Best accuracy: 0.9 
+
+--- GENERATING k-NN PLOTS ---
+null device 
+          1 
+k-value tuning plot saved to ../graphics/04-knn-k_tuning.png
+
+--- FINAL MODEL EVALUATION ---
+Confusion Matrix (k = 3 ):
+         Actual
+Predicted  ad nonad
+    ad    112     1
+    nonad  37    50
+
+Performance Metrics:
+Accuracy: 0.81 
+Precision (ad): 0.9912 
+Recall (ad): 0.7517 
+F1-score (ad): 0.855 
+null device 
+          1 
+Confusion matrix plot saved to ../graphics/04-knn-confusion_matrix.png
+
+=== k-NN MODEL COMPLETED ===
+k-NN results saved to knn_results.RData

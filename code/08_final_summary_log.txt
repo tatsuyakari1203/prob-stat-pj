@@ -1,0 +1,13 @@
+=== INTERNET ADVERTISEMENT CLASSIFICATION PROJECT ===
+=== FINAL ACADEMIC REPORT SUMMARY ===
+Following the course requirements structure
+Loading data from CSV exports...
+
+--- LOADING DATA FROM CSV FILES ---
+ERROR: Missing required CSV files:
+- comprehensive_feature_statistics.csv 
+- correlation_analysis_summary.csv 
+- data_distribution_summary.csv 
+- visualizations_summary.csv 
+Error: Please run the previous analysis scripts to generate CSV files.
+Execution halted

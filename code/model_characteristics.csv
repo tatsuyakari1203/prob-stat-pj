@@ -1,0 +1,4 @@
+"Model","Best_Parameter","Features_Used","Method_Type","Interpretability"
+"kNN","k = 3","All (normalized)","Instance-based","Medium"
+"Decision_Tree","max_depth = 3","First 20","Tree-based","High"
+"Random_Forest","n_trees = 100","All","Ensemble","Low"

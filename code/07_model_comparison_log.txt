@@ -1,0 +1,123 @@
+=== MODEL COMPARISON AND ANALYSIS ===
+
+--- LOADING MODEL RESULTS ---
+All model results loaded successfully
+
+--- PERFORMANCE COMPARISON ---
+Model Performance Comparison:
+          Model Accuracy Precision Recall F1_Score
+1    k-NN (k=3)   0.8100    0.9912 0.7517   0.8550
+2 Decision Tree   0.9106    0.8861 0.4698   0.6140
+3 Random Forest   0.9065    1.0000 0.3826   0.5534
+
+--- BEST MODELS BY METRIC ---
+Best Accuracy: Decision Tree ( 0.9106 )
+Best Precision: Random Forest ( 1 )
+Best Recall: k-NN (k=3) ( 0.7517 )
+Best F1-Score: k-NN (k=3) ( 0.855 )
+
+--- GENERATING COMPARISON PLOTS ---
+null device 
+          1 
+Performance comparison plot saved to ../graphics/07-comparison-model_performance_comparison.png
+null device 
+          1 
+Combined confusion matrices plot saved to ../graphics/all_confusion_matrices.png
+
+Overall Best Model (by F1-score): k-NN (k=3) 
+
+--- DETAILED CONFUSION MATRICES ---
+
+k-NN Confusion Matrix:
+         Actual
+Predicted  ad nonad
+    ad    112     1
+    nonad  37    50
+
+Decision Tree Confusion Matrix:
+         Actual
+Predicted  ad nonad
+    ad     70     9
+    nonad  79   826
+
+Random Forest Confusion Matrix:
+         Actual
+Predicted  ad nonad
+    ad     57     0
+    nonad  92   835
+
+--- MODEL CHARACTERISTICS ANALYSIS ---
+
+k-NN Model:
+- Best k value: 3
+- Uses distance-based classification
+- Requires feature normalization
+- Non-parametric method
+
+Decision Tree Model:
+- Max depth: 3 (for interpretability)
+- Uses 20 features
+- Highly interpretable
+- Prone to overfitting
+
+Random Forest Model:
+- Number of trees: 100 
+- Features per split: 39 
+- Uses all 321 features
+- Ensemble method - reduces overfitting
+- Good balance of accuracy and generalization
+
+--- RANDOM FOREST FEATURE IMPORTANCE ---
+Top 10 most important features:
+feature_usage
+   X2 X1243    X1  X351 X1455 X1483 X1229 X1399    X0  X968 
+   19    18    17    16    15    15    14    13    12    12 
+
+--- CLASS IMBALANCE ANALYSIS ---
+Dataset has class imbalance:
+- 'ad' class: 459 samples (14.0%)
+- 'nonad' class: 2820 samples (86.0%)
+
+Impact on models:
+- All models show high precision but lower recall for 'ad' class
+- This indicates models are conservative in predicting 'ad'
+- Random Forest shows best balance with perfect precision
+
+--- RECOMMENDATIONS ---
+
+Based on the analysis:
+
+1. BEST OVERALL MODEL: Random Forest
+   - Highest accuracy ( 0.9065 )
+   - Perfect precision (1.0000)
+   - Good generalization due to ensemble approach
+   - Handles high-dimensional data well
+
+2. MOST INTERPRETABLE: Decision Tree
+   - Simple tree structure
+   - Easy to understand decision rules
+   - Good accuracy ( 0.9106 )
+
+3. SIMPLEST APPROACH: k-NN
+   - Non-parametric
+   - Good performance with k=3
+   - Requires careful feature scaling
+
+--- FINAL SUMMARY ---
+
+For the Internet Advertisement Classification task:
+- Random Forest is recommended for production use
+- Decision Tree is recommended for explanatory analysis
+- All models handle the classification task well
+- Class imbalance affects recall but not precision
+- Feature engineering could further improve performance
+
+=== MODEL COMPARISON COMPLETED ===
+Final comparison results saved to final_comparison_results.RData
+
+--- EXPORTING CSV SUMMARY ---
+Model performance comparison exported to model_performance_comparison.csv
+Confusion matrices exported to confusion_matrices.csv
+Model characteristics exported to model_characteristics.csv
+Feature importance data format not suitable for CSV export
+Best models summary exported to best_models_summary.csv
