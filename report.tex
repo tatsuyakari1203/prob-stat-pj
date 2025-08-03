@@ -32,14 +32,14 @@
 % https://github.com/MartinScharrer/standalone
 
 % Configurations
-\coursename{Course name h}
-\reporttype{Report type h}
-\title{Report title h}
-\advisor{& Advisor h &}
+\coursename{Probability and Statistics}
+\reporttype{Final Project Report}
+\title{Internet Advertisement Classification using Random Forest}
+\advisor{& [Instructor Name] &}
 \stuname{%
-  & Student 1 & ID 1 \\
-  & Student 2 & ID 2 \\
-  & Student 3 & ID 3 \\
+  & [Student Name 1] & [Student ID 1] \\
+  & [Student Name 2] & [Student ID 2] \\
+  & [Student Name 3] & [Student ID 3] \\
 }
 
 % Allow page breaks inside align* environment
@@ -83,42 +83,145 @@
 \lstlistoflistings{}
 
 \clearpage
-\section{Normal section}
-This is how you normally work with \LaTeX, but you can also split a project into smaller files for easier management.
-To import other files, you can use \mintinline{latex}{\input{}} or \mintinline{latex}{\include{}}.
-There differences can be found at \url{https://tex.stackexchange.com/a/250}, but in short
 
-\begin{center}
-  \mintinline{latex}{\include{filename}} = \mintinline{latex}{\clearpage \input{filename} \clearpage}
-\end{center}
+\section{Introduction}
+\label{sec:introduction}
 
-\section{Label prefixes}
-There are no definite rules for label prefixes, but you can use the following as a guideline.
+Internet advertisement classification is a crucial problem in the field of data processing and machine learning. With the rapid development of the Internet, automatic recognition and classification of advertisements helps improve user experience and optimize content display.
+
+This report presents the analysis process of the "Internet Advertisements Data Set" from the UCI Machine Learning Repository \cite{lichman2013uci} to build a classification model aimed at predicting whether an image is an advertisement or not.
+
+\section{Data Description}
+\label{sec:data-description}
+
+The "Internet Advertisements" dataset consists of 3279 samples with 1559 columns. Each row in the data represents an image labeled as "ad" (advertisement) or "nonad" (non-advertisement) in the last column. Columns 0 to 1557 represent numerical attributes of the image.
+
+\subsection{Dataset Characteristics}
 \begin{itemize}
-  \item \textbf{chap:} for chapters
-  \item \textbf{sec:} for sections
-  \item \textbf{subsec:} for subsections
-  \item \textbf{eq:} for equations
-  \item \textbf{fig:} for figures
-  \item \textbf{tab:} for tables
-  \item \textbf{enum:} for enumerators and items
-  \item \textbf{fn:} for footnotes
-  \item \textbf{lst:} for listings
-  \item \textbf{alg:} for algorithms
-  \item \textbf{app:} for appendices
+  \item Number of samples: 3279
+  \item Number of features: 1558
+  \item Target variable: binary (ad/nonad)
+  \item Missing values: represented by "?"
 \end{itemize}
 
-The \mintinline{latex}{\caption} macro increases the used counter and sets the current label text which is used by \mintinline{latex}{\label}.
-If you use \mintinline{latex}{\label} before it the old label text is used instead, which leads to a wrong number.
-Always use \mintinline{latex}{\label} after \mintinline{latex}{\caption} and not before or in it.
+\section{Data Cleaning}
+\label{sec:data-cleaning}
 
-That said, conventions are just conventions, and you can use whatever you want as long as you are consistent.
+The data cleaning process includes the following steps:
+
+\begin{enumerate}
+  \item \textbf{Handling missing values}: Replace "?" values with the median of each column
+  \item \textbf{Standardizing target variable}: Ensure class labels have consistent format
+  \item \textbf{Removing index columns}: Delete unnecessary index columns for classification
+\end{enumerate}
+
+\begin{lstlisting}[language=R, caption={R code for data cleaning}, label={lst:data-cleaning}]
+# Handle missing values
+for(i in 1:(ncol(data)-1)) {
+  if(any(data[[i]] == "?")) {
+    data[[i]] <- as.numeric(ifelse(data[[i]] == "?", NA, data[[i]]))
+    data[[i]][is.na(data[[i]])] <- median(data[[i]], na.rm = TRUE)
+  }
+}
+\end{lstlisting}
+
+\section{Descriptive Statistics}
+\label{sec:descriptive-statistics}
+
+Descriptive statistical analysis was performed to better understand the data distribution and relationships between variables.
+
+\subsection{Target Variable Distribution}
+The dataset has class imbalance with approximately 1:6 ratio between "ad" and "nonad" classes.
+
+\subsection{Statistical Plots}
+\begin{itemize}
+  \item \textbf{Histogram}: Display feature distributions
+  \item \textbf{Boxplot}: Detect outliers
+  \item \textbf{Scatter plot}: Explore relationships between variables
+  \item \textbf{Correlation heatmap}: Display correlation matrix
+\end{itemize}
+
+\section{Objective and Methodology}
+\label{sec:objective-methodology}
+
+\subsection{Objective}
+Build a classification model to accurately predict whether an image is an advertisement or not based on numerical features.
+
+\subsection{Statistical Methods Used}
+The project uses three main machine learning methods:
+
+\begin{enumerate}
+  \item \textbf{k-Nearest Neighbors (k-NN)} \cite{cover1967nearest}: Simple distance-based method
+  \item \textbf{Decision Tree} \cite{quinlan1993c4}: Interpretable model with tree structure
+  \item \textbf{Random Forest} \cite{breiman2001random}: Ensemble method combining multiple decision trees
+\end{enumerate}
+
+\textbf{Reasons for choosing Random Forest as the main method}:
+\begin{itemize}
+  \item Handles high-dimensional data well
+  \item Reduces overfitting compared to single Decision Trees
+  \item Provides feature importance information
+  \item High performance on various types of data
+\end{itemize}
+
+\section{Main Results}
+\label{sec:main-results}
+
+\subsection{Model Performance}
+
+\begin{table}[H]
+\centering
+\caption{Model performance comparison}
+\label{tab:model-comparison}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} \\
+\midrule
+k-NN (k=3) & 0.81 & 0.99 & 0.75 \\
+Decision Tree & 0.91 & 0.89 & 0.47 \\
+Random Forest & 0.91 & 1.00 & 0.38 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Random Forest Confusion Matrix}
+
+\begin{lstlisting}[language=R, caption={R code for Random Forest}, label={lst:random-forest}]
+# Build Random Forest with 100 trees
+rf_model <- randomForest(x = X_train, y = y_train, 
+                        ntree = 100, 
+                        mtry = floor(sqrt(ncol(X_train))))
+
+# Predict on test set
+y_pred <- predict(rf_model, X_test)
+\end{lstlisting}
+
+\subsection{Feature Importance}
+Random Forest shows the most important features in advertisement classification, with X2, X1243, and X1 being the three features with the greatest impact.
+
+\subsection{Results Analysis}
+\begin{itemize}
+  \item \textbf{Random Forest} achieved the highest accuracy (91\%) with perfect precision (100\%)
+  \item \textbf{Decision Tree} provides good balance between performance and interpretability
+  \item \textbf{k-NN} shows stable performance with simple approach
+  \item All models handle the classification problem well with accuracy above 80\%
+\end{itemize}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The project has successfully applied machine learning methods to classify Internet advertisements. Random Forest was identified as the best method with 91\% accuracy and perfect precision, suitable for deployment in real advertisement filtering systems.
+
+Using Random Forest - a method not previously learned in class - has provided deep insights into handling high-dimensional data and the importance of combining multiple models to improve performance.
+
+\subsection{Member Contributions}
+\begin{itemize}
+  \item [Member 1]: Data preprocessing and descriptive statistical analysis
+  \item [Member 2]: Building and evaluating machine learning models
+  \item [Member 3]: Report writing and result presentation
+\end{itemize}
 
 \clearpage
-\input{chapters/example/better-tables.tex}
-\input{chapters/example/better-enum.tex}
-\include{chapters/example/codespace.tex}
-\include{chapters/example/figwidth.tex}
 
 \bibliographystyle{plain}
 \bibliography{refs/example.bib}

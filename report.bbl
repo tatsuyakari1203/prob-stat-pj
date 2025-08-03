@@ -1,0 +1,28 @@
+\begin{thebibliography}{1}
+
+\bibitem{breiman2001random}
+Leo Breiman.
+\newblock Random forests.
+\newblock {\em Machine learning}, 45(1):5--32, 2001.
+
+\bibitem{cover1967nearest}
+Thomas Cover and Peter Hart.
+\newblock Nearest neighbor pattern classification.
+\newblock {\em IEEE transactions on information theory}, 13(1):21--27, 1967.
+
+\bibitem{hastie2009elements}
+Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
+\newblock {\em The elements of statistical learning: data mining, inference,
+  and prediction}.
+\newblock Springer Science \& Business Media, 2009.
+
+\bibitem{lichman2013uci}
+M.~Lichman.
+\newblock {UCI} machine learning repository, 2013.
+
+\bibitem{quinlan1993c4}
+J~Ross Quinlan.
+\newblock {\em C4. 5: programs for machine learning}.
+\newblock Morgan kaufmann, 1993.
+
+\end{thebibliography}
