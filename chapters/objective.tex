@@ -115,29 +115,36 @@ We employ three different approaches, each representing distinct learning paradi
 \begin{figure}[h]
 \centering
 \vspace{0.5cm}
-\begin{tikzpicture}[scale=1.1,
-    level 1/.style={sibling distance=5cm},
-    level 2/.style={sibling distance=2.5cm},
-    every node/.style={circle, draw, minimum size=1cm, text width=1.5cm, align=center, font=\small\bfseries, fill=cyan!20},
-    leaf/.style={rectangle, draw, minimum size=1cm, text width=1.5cm, align=center, font=\small\bfseries, fill=lime!30, rounded corners=3pt},
-    edge from parent/.style={draw, thick}
+\begin{tikzpicture}[
+    scale=1.2,
+    level 1/.style={sibling distance=4.5cm, level distance=3cm},
+    level 2/.style={sibling distance=2.5cm, level distance=3cm},
+    decision/.style={circle, draw=blue!60, thick, minimum size=1.8cm, 
+                    text width=1.6cm, align=center, font=\small\bfseries,
+                    fill=blue!20, 
+                    drop shadow={opacity=0.3, shadow xshift=2pt, shadow yshift=-2pt}},
+    leaf/.style={rectangle, draw=green!60, thick, minimum size=1.5cm, 
+                text width=1.8cm, align=center, font=\small\bfseries,
+                fill=green!20, rounded corners=8pt,
+                drop shadow={opacity=0.3, shadow xshift=2pt, shadow yshift=-2pt}},
+    edge from parent/.style={draw=gray!70, very thick, -stealth}
 ]
-    \node {Feature A\\> 0.5?}
+    \node[decision] {Feature A\\$> 0.5$?}
         child {
-            node {Feature B\\> 0.3?}
+            node[decision] {Feature B\\$> 0.3$?}
             child {
-                node[leaf] {Non-Ad\\(85\%)}
-                edge from parent node[left, font=\small] {No}
+                node[leaf] {\textbf{Non-Ad}\\(85\%)}
+                edge from parent node[left, font=\footnotesize, text=red!70] {\textbf{No}}
             }
             child {
-                node[leaf] {Ad\\(92\%)}
-                edge from parent node[right, font=\small] {Yes}
+                node[leaf] {\textbf{Ad}\\(92\%)}
+                edge from parent node[right, font=\footnotesize, text=green!70] {\textbf{Yes}}
             }
-            edge from parent node[left, font=\small] {No}
+            edge from parent node[left, font=\footnotesize, text=red!70] {\textbf{No}}
         }
         child {
-            node[leaf] {Ad\\(78\%)}
-            edge from parent node[right, font=\small] {Yes}
+            node[leaf] {\textbf{Ad}\\(78\%)}
+            edge from parent node[right, font=\footnotesize, text=green!70] {\textbf{Yes}}
         };
 \end{tikzpicture}
 \vspace{0.3cm}
@@ -183,54 +190,8 @@ We employ three different approaches, each representing distinct learning paradi
 
 \begin{figure}[h]
 \centering
-\vspace{0.5cm}
-\begin{tikzpicture}[scale=0.9]
-    % Original dataset
-    \node[draw, rectangle, minimum width=2.5cm, minimum height=1.2cm, text width=2.3cm, align=center, font=\small\bfseries, fill=gray!20, rounded corners=5pt] at (0,5) {Original\\Dataset};
-    
-    % Bootstrap samples with better spacing
-    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=blue!30, rounded corners=3pt] at (-4,3) {Bootstrap\\Sample 1};
-    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=green!30, rounded corners=3pt] at (0,3) {Bootstrap\\Sample 2};
-    \node[draw, rectangle, minimum width=1.8cm, minimum height=1cm, text width=1.6cm, align=center, font=\small\bfseries, fill=red!30, rounded corners=3pt] at (4,3) {Bootstrap\\Sample 3};
-    
-    % Decision Trees with better styling
-    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=blue!40] at (-4,1) {Tree 1};
-    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=green!40] at (0,1) {Tree 2};
-    \node[draw, circle, minimum size=1.2cm, font=\small\bfseries, fill=red!40] at (4,1) {Tree 3};
-    
-    % Individual predictions with boxes
-    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=blue!20, rounded corners=2pt] at (-4,-0.5) {Ad};
-    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=green!20, rounded corners=2pt] at (0,-0.5) {Non-Ad};
-    \node[draw, rectangle, minimum width=1.2cm, minimum height=0.6cm, font=\small\bfseries, fill=red!20, rounded corners=2pt] at (4,-0.5) {Ad};
-    
-    % Final prediction with emphasis
-    \node[draw, rectangle, minimum width=3cm, minimum height=1cm, fill=yellow!40, text width=2.8cm, align=center, font=\small\bfseries, rounded corners=5pt, thick] at (0,-2.5) {Final Prediction:\\Ad (2/3 votes)};
-    
-    % Improved arrows
-    \draw[->, thick, blue] (0,4.4) -- (-4,3.6);
-    \draw[->, thick, green] (0,4.4) -- (0,3.6);
-    \draw[->, thick, red] (0,4.4) -- (4,3.6);
-    
-    \draw[->, thick, blue] (-4,2.4) -- (-4,1.6);
-    \draw[->, thick, green] (0,2.4) -- (0,1.6);
-    \draw[->, thick, red] (4,2.4) -- (4,1.6);
-    
-    \draw[->, thick, blue] (-4,0.4) -- (-4,-0.1);
-    \draw[->, thick, green] (0,0.4) -- (0,-0.1);
-    \draw[->, thick, red] (4,0.4) -- (4,-0.1);
-    
-    % Voting arrows
-    \draw[->, thick, orange] (-4,-0.9) -- (-1.5,-2);
-    \draw[->, thick, orange] (0,-0.9) -- (0,-2);
-    \draw[->, thick, orange] (4,-0.9) -- (1.5,-2);
-    
-    % Process labels
-    \node[font=\small\bfseries, color=blue] at (-2,4) {Bootstrap};
-    \node[font=\small\bfseries, color=blue] at (2,4) {Sampling};
-    \node[font=\small\bfseries, color=orange] at (0,-1.5) {Majority Voting};
-\end{tikzpicture}
-\vspace{0.3cm}
-\caption{Random Forest: Ensemble of Decision Trees}
+\includegraphics[width=0.8\textwidth]{graphics/random-forest-diagram.png}
+\caption{Random Forest: Ensemble of Decision Trees for Ad Classification}
 \vspace{1cm}
 \end{figure}
 
