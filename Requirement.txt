@@ -10,3 +10,35 @@ Objective and how to achieve it (statistical methods?)
 Main result: analyze the data, R code (in a framed textbox), explain the result and interpret the conclusion.
 Contribution of members, table of content, source of the data, references,.. (should be well-organized)
 Understand the entire report
+
+/// STRUCTURE 
+
+**PART: 1. Cover**
+CONTENT: Cover page 1: Title of the project, Faculty, Subject, Class, Group, Instructor, Group members, Student ID, Description of contributions.
+NOTE:
+
+**PART: 2. Body (maximum 30 pages)**
+
+CONTENT: 1. Data overview
+NOTE: Present the context of the data, number of observations, collection method, types of variables, etc.
+
+CONTENT: 2. Background knowledge
+NOTE: Present a summary of the theory behind the methods used in the project.
+
+CONTENT: 3. Data preprocessing
+NOTE: Read data, handle missing data, handle data formats, add variables, remove variables, transform variables, etc.
+
+CONTENT: 4. Descriptive statistics
+NOTE: Present some sample statistics in tabular form, draw charts. Note that all tables and charts must be numbered, titled, and have corresponding comments.
+
+CONTENT: 5. Inferential statistics
+NOTE: Present some statistical methods to draw conclusions for the population. Note that each method must fully include: objective, results, comments, and conclusion.
+
+CONTENT: 6. Discussion and extension
+NOTE: Discuss the advantages, new findings, as well as the limitations of the methods used in the project. Propose extensions if any.
+
+CONTENT: 7. Data source and source code
+NOTE: Provide the link to the data and the link to the R code.
+
+CONTENT: 8. References
+NOTE: Sort in alphabetical (ABC) order.
