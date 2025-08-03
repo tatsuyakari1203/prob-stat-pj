@@ -1,0 +1,282 @@
+\section{Decision Tree Model}
+
+\subsubsection{Introduction}
+
+Decision Tree is one of the most popular and interpretable machine learning algorithms, widely used in both classification and regression problems. This algorithm creates a predictive model in the form of a tree, where each internal node represents a test condition on an attribute, each branch represents the outcome of the test condition, and each leaf node represents a classification decision.
+
+In this study, we apply the decision tree algorithm to classify Internet advertisements, aiming to determine whether a webpage contains advertisements or not based on extracted features.
+
+\subsubsection{Theoretical Foundation}
+
+\subsubsection{Decision Tree Algorithm}
+
+Decision trees operate on the "divide and conquer" principle, where the dataset is progressively divided based on test conditions until homogeneous groups are achieved or stopping criteria are met.
+
+The decision tree construction process includes the following main steps:
+\begin{enumerate}
+    \item Select the best attribute to split at the current node
+    \item Create branches for each possible value of the selected attribute
+    \item Split the dataset according to the branches
+    \item Repeat the process for each child branch until stopping criteria are satisfied
+\end{enumerate}
+
+\subsubsection{Gini Impurity Measure}
+
+To select the best attribute for splitting, we use the Gini Impurity measure. Gini Impurity measures the "impurity" level of a dataset, defined as follows:
+
+\begin{equation}
+Gini(S) = 1 - \sum_{i=1}^{c} p_i^2
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $S$ is the dataset
+    \item $c$ is the number of classes
+    \item $p_i$ is the proportion of samples belonging to class $i$ in set $S$
+\end{itemize}
+
+Gini Impurity ranges from 0 to 0.5 (for binary classification problems), where 0 means the dataset is completely pure (contains only one class) and 0.5 means the dataset has an even distribution between classes.
+
+\subsubsection{Splitting Criteria}
+
+At each node, the algorithm selects the attribute and splitting threshold that minimizes the weighted Gini Impurity of the child nodes:
+
+\begin{equation}
+Gini_{weighted} = \frac{|S_{left}|}{|S|} \times Gini(S_{left}) + \frac{|S_{right}|}{|S|} \times Gini(S_{right})
+\end{equation}
+
+where $S_{left}$ and $S_{right}$ are the subsets created after splitting.
+
+\subsection{Algorithm Implementation}
+
+\subsubsection{Data Preparation}
+
+Similar to the k-NN model, we use the first 20 features from the dataset to ensure model interpretability. The data is split into training (70\%) and testing (30\%) sets with 2295 and 984 samples respectively.
+
+\subsubsection{Gini Impurity Function}
+
+We implement the Gini Impurity function as follows:
+
+\begin{lstlisting}[language=R, caption=Gini Impurity Function]
+gini_impurity <- function(labels) {
+  if(length(labels) == 0) return(0)
+  proportions <- table(labels) / length(labels)
+  return(1 - sum(proportions^2))
+}
+\end{lstlisting}
+
+\subsection{Best Split Finding Function}
+
+This function iterates through all attributes and possible thresholds to find the optimal split:
+
+\begin{lstlisting}[language=R, caption=Best Split Finding Function]
+find_best_split <- function(data, target_col) {
+  best_gini <- Inf
+  best_feature <- NULL
+  best_threshold <- NULL
+  
+  for(feature in names(data)[names(data) != target_col]) {
+    values <- unique(data[[feature]])
+    if(length(values) > 1) {
+      for(threshold in values) {
+        left_indices <- data[[feature]] <= threshold
+        right_indices <- !left_indices
+        
+        if(sum(left_indices) > 0 && sum(right_indices) > 0) {
+          left_gini <- gini_impurity(data[[target_col]][left_indices])
+          right_gini <- gini_impurity(data[[target_col]][right_indices])
+          
+          weighted_gini <- (sum(left_indices) * left_gini + 
+                           sum(right_indices) * right_gini) / nrow(data)
+          
+          if(weighted_gini < best_gini) {
+            best_gini <- weighted_gini
+            best_feature <- feature
+            best_threshold <- threshold
+          }
+        }
+      }
+    }
+  }
+  
+  return(list(feature = best_feature, threshold = best_threshold, 
+              gini = best_gini))
+}
+\end{lstlisting}
+
+\subsubsection{Tree Building Function}
+
+The decision tree is built recursively with a maximum depth of 3 to avoid overfitting:
+
+\begin{lstlisting}[language=R, caption=Decision Tree Building Function]
+build_simple_tree <- function(data, target_col, max_depth = 3, 
+                             current_depth = 0) {
+  # Stopping conditions
+  if(current_depth >= max_depth || nrow(data) < 10 || 
+     length(unique(data[[target_col]])) == 1) {
+    majority_class <- names(sort(table(data[[target_col]]), 
+                                decreasing = TRUE))[1]
+    return(list(type = "leaf", prediction = majority_class, 
+                samples = nrow(data)))
+  }
+  
+  # Find best split
+  split_info <- find_best_split(data, target_col)
+  
+  if(is.null(split_info$feature)) {
+    majority_class <- names(sort(table(data[[target_col]]), 
+                                decreasing = TRUE))[1]
+    return(list(type = "leaf", prediction = majority_class, 
+                samples = nrow(data)))
+  }
+  
+  # Split data and build subtrees
+  left_indices <- data[[split_info$feature]] <= split_info$threshold
+  right_indices <- !left_indices
+  
+  left_data <- data[left_indices, ]
+  right_data <- data[right_indices, ]
+  
+  left_tree <- build_simple_tree(left_data, target_col, 
+                                max_depth, current_depth + 1)
+  right_tree <- build_simple_tree(right_data, target_col, 
+                                 max_depth, current_depth + 1)
+  
+  return(list(
+    type = "node",
+    feature = split_info$feature,
+    threshold = split_info$threshold,
+    left = left_tree,
+    right = right_tree,
+    samples = nrow(data)
+  ))
+}
+\end{lstlisting}
+
+\subsection{Model Evaluation}
+
+\subsubsection{Training Results}
+
+The decision tree model achieved the following results:
+
+\begin{table}[h]
+\centering
+\caption{Decision Tree Model Training Results}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Training Accuracy & 93.46\% \\
+Test Accuracy & 91.06\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Confusion Matrix}
+
+The confusion matrix on the test set shows:
+
+\begin{table}[h]
+\centering
+\caption{Confusion Matrix - Decision Tree}
+\begin{tabular}{|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Predicted}} & \multicolumn{2}{c|}{\textbf{Actual}} \\
+\cline{2-3}
+ & \textbf{ad} & \textbf{nonad} \\
+\hline
+\textbf{ad} & 70 & 9 \\
+\hline
+\textbf{nonad} & 79 & 826 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Evaluation Metrics}
+
+Detailed evaluation metrics of the model:
+
+\begin{table}[h]
+\centering
+\caption{Decision Tree Model Evaluation Metrics}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Accuracy & 91.06\% \\
+Precision (ad) & 88.61\% \\
+Recall (ad) & 46.98\% \\
+F1-score (ad) & 61.40\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Decision Tree Structure}
+
+The constructed decision tree has the following structure:
+
+\begin{figure}[h]
+\centering
+\begin{verbatim}
+Node: X1 <= 389 (samples: 2295)
+|-- Left:
+    Node: X11 <= 0 (samples: 2103)
+    |-- Left:
+        Node: X9 <= 0 (samples: 2092)
+        |-- Left:
+            Leaf: Predict nonad (samples: 2077)
+        |-- Right:
+            Leaf: Predict ad (samples: 15)
+    |-- Right:
+        Leaf: Predict ad (samples: 11)
+|-- Right:
+    Node: X0 <= 20 (samples: 192)
+    |-- Left:
+        Leaf: Predict nonad (samples: 22)
+    |-- Right:
+        Node: X2 <= 5.05 (samples: 170)
+        |-- Left:
+            Leaf: Predict nonad (samples: 12)
+        |-- Right:
+            Leaf: Predict ad (samples: 158)
+\end{verbatim}
+\caption{Decision tree structure with maximum depth of 3}
+\end{figure}
+
+\subsection{Results Analysis}
+
+\subsubsection{Model Strengths}
+
+\begin{itemize}
+    \item \textbf{High interpretability}: Decision trees provide clear and understandable rules, allowing users to follow the decision-making process.
+    \item \textbf{High accuracy}: The model achieves 91.06\% accuracy on the test set, higher than the k-NN model (81\%).
+    \item \textbf{High precision}: With 88.61\% precision for the "ad" class, the model can accurately identify advertisements.
+    \item \textbf{No data normalization required}: Unlike k-NN, decision trees are not affected by the scale of features.
+\end{itemize}
+
+\subsubsection{Model Limitations}
+
+\begin{itemize}
+    \item \textbf{Low recall}: With only 46.98\% recall, the model misses many actual advertisement cases.
+    \item \textbf{Prone to overfitting}: Despite depth limitations, decision trees still tend to memorize training data.
+    \item \textbf{Instability}: Small changes in data can lead to completely different trees.
+    \item \textbf{Bias towards features with many values}: The algorithm may favor features with many distinct values.
+\end{itemize}
+
+\subsubsection{Impact of Class Imbalance}
+
+Similar to k-NN, the decision tree model is also affected by class imbalance in the data ("nonad":"ad" ratio is approximately 5.6:1). This leads to:
+
+\begin{itemize}
+    \item The model tends to predict the "nonad" class more often
+    \item Low recall for the "ad" class (46.98\%)
+    \item Moderate F1-score (61.40\%) due to the balance between precision and recall
+\end{itemize}
+
+\subsection{Conclusion}
+
+The decision tree model shows good performance in Internet advertisement classification with 91.06\% accuracy. The model has advantages in high interpretability and good precision, but needs improvement in recall to minimize missing advertisements.
+
+The tree structure shows that features X1, X11, X9, X0, and X2 play important roles in classification. Particularly, feature X1 is used as the root node with threshold 389, showing its importance in distinguishing between advertisements and non-advertisements.
+
+In future research, techniques such as pruning could be considered to reduce overfitting, or combining with class imbalance handling methods to improve recall.

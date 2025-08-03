@@ -1,0 +1,199 @@
+\section{Random Forest Model}
+
+\subsubsection{Introduction}
+
+Random Forest is an ensemble learning method that combines multiple decision trees to create a more robust and accurate predictive model. This algorithm addresses the overfitting problem of individual decision trees by introducing randomness in both data sampling and feature selection, resulting in improved generalization performance.
+
+In this study, we implement Random Forest for Internet advertisement classification, leveraging the collective wisdom of multiple trees to achieve better classification accuracy and stability.
+
+\subsubsection{Theoretical Foundation}
+
+\subsubsection{Ensemble Learning Principle}
+
+Random Forest operates on the principle of ensemble learning, where multiple weak learners (decision trees) are combined to form a strong learner. The algorithm introduces two key sources of randomness:
+
+\begin{enumerate}
+    \item \textbf{Bootstrap Aggregating (Bagging)}: Each tree is trained on a different bootstrap sample of the training data
+    \item \textbf{Random Feature Selection}: At each split, only a random subset of features is considered
+\end{enumerate}
+
+\subsubsection{Bootstrap Sampling}
+
+Bootstrap sampling creates diverse training sets by sampling with replacement from the original dataset. For a dataset of size $n$, each bootstrap sample also contains $n$ instances, but some instances may appear multiple times while others may not appear at all.
+
+\subsubsection{Random Feature Selection}
+
+At each node split, instead of considering all features, Random Forest randomly selects $m$ features where $m = \sqrt{p}$ for classification problems ($p$ is the total number of features). This reduces correlation between trees and improves ensemble diversity.
+
+\subsubsection{Majority Voting}
+
+For classification, Random Forest uses majority voting to combine predictions from all trees:
+
+\begin{equation}
+\hat{y} = \text{mode}\{h_1(x), h_2(x), ..., h_B(x)\}
+\end{equation}
+
+where $h_i(x)$ is the prediction of the $i$-th tree and $B$ is the number of trees.
+
+\subsection{Algorithm Implementation}
+
+\subsubsection{Data Preparation}
+
+The Random Forest model uses all 1558 features from the dataset to leverage the ensemble's ability to handle high-dimensional data. The data is split into training (70\%) and testing (30\%) sets with 2295 and 984 samples respectively.
+
+\subsubsection{Bootstrap Sampling Function}
+
+\begin{lstlisting}[language=R, caption=Bootstrap Sampling Implementation]
+bootstrap_sample <- function(data) {
+  n <- nrow(data)
+  indices <- sample(1:n, n, replace = TRUE)
+  return(data[indices, ])
+}
+\end{lstlisting}
+
+\subsubsection{Random Feature Selection}
+
+\begin{lstlisting}[language=R, caption=Random Feature Selection]
+select_random_features <- function(feature_names, m) {
+  return(sample(feature_names, min(m, length(feature_names))))
+}
+\end{lstlisting}
+
+\subsubsection{Forest Construction}
+
+The Random Forest is built with 100 trees, each with a maximum depth of 5. At each split, $\sqrt{1558} \approx 39$ features are randomly selected:
+
+\begin{lstlisting}[language=R, caption=Random Forest Training]
+n_trees <- 100
+m_features <- floor(sqrt(ncol(train_data) - 1))
+
+forest <- list()
+for(i in 1:n_trees) {
+  boot_data <- bootstrap_sample(train_data)
+  tree <- build_rf_tree(boot_data, "target", 
+                       max_depth = 5, m_features = m_features)
+  forest[[i]] <- tree
+}
+\end{lstlisting}
+
+\subsection{Model Evaluation}
+
+\subsubsection{Training Results}
+
+The Random Forest model achieved the following results:
+
+\begin{table}[h]
+\centering
+\caption{Random Forest Model Training Results}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Training Accuracy & 92.29\% \\
+Test Accuracy & 90.65\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Confusion Matrix}
+
+The confusion matrix on the test set shows:
+
+\begin{table}[h]
+\centering
+\caption{Confusion Matrix - Random Forest}
+\begin{tabular}{|c|c|c|}
+\hline
+\multirow{2}{*}{\textbf{Predicted}} & \multicolumn{2}{c|}{\textbf{Actual}} \\
+\cline{2-3}
+ & \textbf{ad} & \textbf{nonad} \\
+\hline
+\textbf{ad} & 57 & 0 \\
+\hline
+\textbf{nonad} & 92 & 835 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Evaluation Metrics}
+
+Detailed evaluation metrics of the model:
+
+\begin{table}[h]
+\centering
+\caption{Random Forest Performance Metrics}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Metric} & \textbf{Value} \\
+\hline
+Accuracy & 90.65\% \\
+Precision (ad) & 100.00\% \\
+Recall (ad) & 38.26\% \\
+F1-score (ad) & 55.34\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Feature Importance}
+
+The top 10 most important features based on usage frequency across all trees:
+
+\begin{table}[h]
+\centering
+\caption{Top 10 Feature Importance - Random Forest}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Feature} & \textbf{Usage Count} \\
+\hline
+X2 & 19 \\
+X1243 & 18 \\
+X1 & 17 \\
+X351 & 16 \\
+X1455 & 15 \\
+X1483 & 15 \\
+X1229 & 14 \\
+X1399 & 13 \\
+X0 & 12 \\
+X968 & 12 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Results Analysis}
+
+\subsubsection{Model Strengths}
+
+\begin{itemize}
+    \item \textbf{Perfect precision}: The model achieves 100\% precision for the "ad" class, meaning no false positives
+    \item \textbf{Reduced overfitting}: Ensemble approach provides better generalization than single decision trees
+    \item \textbf{Feature importance insights}: Identifies the most relevant features for classification
+    \item \textbf{Robustness}: Less sensitive to outliers and noise compared to individual trees
+\end{itemize}
+
+\subsubsection{Model Limitations}
+
+\begin{itemize}
+    \item \textbf{Low recall}: With only 38.26\% recall, the model misses many actual advertisement cases
+    \item \textbf{Conservative predictions}: The model is very conservative in predicting the "ad" class
+    \item \textbf{Computational complexity}: Requires more resources to train and predict compared to single trees
+    \item \textbf{Less interpretable}: Individual tree decisions are harder to trace in ensemble
+\end{itemize}
+
+\subsubsection{Impact of Class Imbalance}
+
+The Random Forest model is significantly affected by the class imbalance ("nonad":"ad" ratio of 5.6:1):
+
+\begin{itemize}
+    \item The model strongly favors the majority class ("nonad")
+    \item Extremely low recall for the "ad" class (38.26\%)
+    \item Perfect precision comes at the cost of missing many advertisements
+    \item The F1-score (55.34\%) reflects the trade-off between precision and recall
+\end{itemize}
+
+\subsection{Conclusion}
+
+The Random Forest model demonstrates excellent precision (100\%) but poor recall (38.26\%) in Internet advertisement classification. While the ensemble approach provides stability and reduces overfitting, the severe class imbalance significantly impacts the model's ability to detect advertisements.
+
+The feature importance analysis reveals that features X2, X1243, and X1 are most frequently used across the forest, indicating their significance in the classification task. The model's conservative approach results in very few false positives but at the expense of missing many actual advertisements.
+
+Future improvements could include implementing class balancing techniques such as SMOTE, adjusting class weights, or using cost-sensitive learning to better handle the imbalanced dataset and improve recall performance.

@@ -1,61 +1,61 @@
-# Phân tích tập dữ liệu quảng cáo trên Internet
+# Internet Advertisement Dataset Analysis
 
-Dự án này phân tích "Tập dữ liệu quảng cáo trên Internet" từ Kho lưu trữ học máy UCI để xây dựng một mô hình phân loại nhằm dự đoán liệu một hình ảnh có phải là quảng cáo ("ad") hay không ("nonad").
+This project analyzes the "Internet Advertisements Data Set" from the UCI Machine Learning Repository to build a classification model that predicts whether an image is an advertisement ("ad") or not ("nonad").
 
-## Mô tả dự án
+## Project Description
 
-### Về tập dữ liệu
-- **Nhiệm vụ**: Dự đoán liệu một hình ảnh có phải là quảng cáo ("ad") hay không ("nonad")
-- **Kích thước**: 1559 cột dữ liệu
-- **Cấu trúc**: Mỗi hàng đại diện cho một hình ảnh được gắn nhãn "ad" hoặc "nonad" ở cột cuối
-- **Thuộc tính**: Cột 0-1557 đại diện cho các thuộc tính số của hình ảnh
-- **Nguồn**: UCI Machine Learning Repository
+### About the Dataset
+- **Task**: Predict whether an image is an advertisement ("ad") or not ("nonad")
+- **Size**: 1559 data columns
+- **Structure**: Each row represents an image labeled "ad" or "nonad" in the last column
+- **Attributes**: Columns 0-1557 represent numerical attributes of the image
+- **Source**: UCI Machine Learning Repository
 
-### Yêu cầu dự án
-- Sử dụng các phương pháp thống kê chưa được học trong lớp để phân tích tập dữ liệu
-- Mô tả và làm sạch dữ liệu
-- Thống kê mô tả: histogram, boxplot, scatter plot, mean, median,...
-- Xác định mục tiêu và phương pháp thống kê để đạt được
-- Phân tích dữ liệu với mã R và giải thích kết quả
+### Project Requirements
+- Use statistical methods not covered in class to analyze the dataset
+- Describe and clean the data
+- Descriptive statistics: histogram, boxplot, scatter plot, mean, median, etc.
+- Define objectives and statistical methods to achieve them
+- Analyze data with R code and explain results
 
-## Cấu trúc thư mục
+## Directory Structure
 
-- `/code`: Chứa tất cả các tập lệnh R để phân tích dữ liệu, từ tải và làm sạch đến xây dựng và so sánh mô hình
-  - `01_data_loading.R`: Tải dữ liệu
-  - `02_data_cleaning.R`: Làm sạch dữ liệu
-  - `03_eda.R`: Phân tích khám phá dữ liệu
-  - `04_knn_model.R`: Mô hình K-Nearest Neighbors
-  - `05_decision_tree.R`: Mô hình cây quyết định
-  - `06_random_forest.R`: Mô hình Random Forest
-  - `07_model_comparison.R`: So sánh các mô hình
-  - `08_final_summary.R`: Tổng kết cuối cùng
-  - `09_plot_summary.R`: Tạo biểu đồ tổng kết
-  - `*.csv`: Các file dữ liệu được tạo ra từ quá trình phân tích
-  - `*_log.txt`: Log files cho từng bước phân tích
-- `/graphics`: Chứa tất cả các biểu đồ và hình ảnh được tạo ra trong quá trình phân tích
-- `/chapters`: Chứa các tệp LaTeX cho các chương của báo cáo
-  - `introduction.tex`: Giới thiệu
-  - `data_description.tex`: Mô tả dữ liệu
-  - `descriptive_statistics.tex`: Thống kê mô tả
-  - `objective.tex`: Mục tiêu và phương pháp
-- `/refs`: Chứa tệp BibTeX cho các tài liệu tham khảo
-- `report.tex`: Tệp LaTeX chính để biên dịch báo cáo
-- `codespace.sty`: Style file cho LaTeX
-- `hcmut-report.cls`: Class file cho báo cáo HCMUT
+- `/code`: Contains all R scripts for data analysis, from loading and cleaning to building and comparing models
+- `01_data_loading.R`: Data loading
+- `02_data_cleaning.R`: Data cleaning
+- `03_eda.R`: Exploratory data analysis
+- `04_knn_model.R`: K-Nearest Neighbors model
+- `05_decision_tree.R`: Decision tree model
+- `06_random_forest.R`: Random Forest model
+- `07_model_comparison.R`: Model comparison
+- `08_final_summary.R`: Final summary
+- `09_plot_summary.R`: Summary plot generation
+- `*.csv`: Data files generated from the analysis process
+- `*_log.txt`: Log files for each analysis step
+- `/graphics`: Contains all charts and images generated during the analysis process
+- `/chapters`: Contains LaTeX files for report chapters
+- `introduction.tex`: Introduction
+- `data_description.tex`: Data description
+- `descriptive_statistics.tex`: Descriptive statistics
+- `objective.tex`: Objectives and methodology
+- `/refs`: Contains BibTeX file for references
+- `report.tex`: Main LaTeX file for compiling the report
 
-## Cài đặt môi trường
+- `hcmut-report.cls`: Class file for HCMUT report
 
-### Cài đặt R trên Linux/WSL
+## Environment Setup
+
+### Installing R on Linux/WSL
 
 #### Ubuntu/Debian:
 ```bash
-# Cập nhật package list
+# Update package list
 sudo apt update
 
-# Cài đặt R
+# Install R
 sudo apt install r-base r-base-dev
 
-# Cài đặt các dependencies cho các package R
+# Install dependencies for R packages
 sudo apt install libcurl4-openssl-dev libssl-dev libxml2-dev
 sudo apt install libcairo2-dev libxt-dev
 ```
@@ -65,19 +65,19 @@ sudo apt install libcairo2-dev libxt-dev
 # Fedora
 sudo dnf install R R-devel
 
-# CentOS/RHEL (cần EPEL repository)
+# CentOS/RHEL (requires EPEL repository)
 sudo yum install epel-release
 sudo yum install R R-devel
 ```
 
-### Cài đặt TeXLive trên Linux/WSL
+### Installing TeXLive on Linux/WSL
 
 #### Ubuntu/Debian:
 ```bash
-# Cài đặt TeXLive full
+# Install TeXLive full
 sudo apt install texlive-full
 
-# Hoặc cài đặt minimal và thêm packages cần thiết
+# Or install minimal and add required packages
 sudo apt install texlive-latex-base texlive-latex-recommended
 sudo apt install texlive-latex-extra texlive-fonts-recommended
 sudo apt install texlive-bibtex-extra biber
@@ -92,29 +92,29 @@ sudo dnf install texlive-scheme-full
 sudo yum install texlive texlive-latex
 ```
 
-### Kiểm tra cài đặt
+### Verify Installation
 ```bash
-# Kiểm tra R
+# Check R
 R --version
 
-# Kiểm tra LaTeX
+# Check LaTeX
 pdflatex --version
 biber --version
 ```
 
-## Cách chạy dự án
+## How to Run the Project
 
-### 1. Cài đặt các gói R cần thiết
+### 1. Install Required R Packages
 ```bash
 Rscript code/install_packages.R
 ```
 
-### 2. Chạy quy trình phân tích
+### 2. Run Analysis Pipeline
 ```bash
-# Chạy tất cả scripts theo thứ tự
+# Run all scripts in order
 bash code/run_all_scripts.sh
 
-# Hoặc chạy từng script riêng lẻ
+# Or run individual scripts
 Rscript code/01_data_loading.R
 Rscript code/02_data_cleaning.R
 Rscript code/03_eda.R
@@ -126,24 +126,24 @@ Rscript code/08_final_summary.R
 Rscript code/09_plot_summary.R
 ```
 
-### 3. Biên dịch báo cáo LaTeX
+### 3. Compile LaTeX Report
 ```bash
-# Biên dịch báo cáo
+# Compile report
 pdflatex report.tex
 biber report
 pdflatex report.tex
 pdflatex report.tex
 ```
 
-## Kết quả
+## Results
 
-Sau khi chạy xong, bạn sẽ có:
-- File `report.pdf`: Báo cáo hoàn chỉnh
-- Các file CSV trong `/code`: Kết quả phân tích dữ liệu
-- Các file log: Chi tiết quá trình thực thi
-- Các biểu đồ trong `/graphics`: Hình ảnh minh họa
+After running the project, you will have:
+- `report.pdf` file: Complete report
+- CSV files in `/code`: Data analysis results
+- Log files: Detailed execution process
+- Charts in `/graphics`: Illustrative images
 
-## Tài liệu tham khảo
+## References
 
 Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science.
 
