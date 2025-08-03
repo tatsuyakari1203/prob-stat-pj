@@ -1,8 +1,0 @@
-"Metric","Value"
-"Total_Samples",3279
-"Total_Features",1558
-"Ad_Class_Count",459
-"Nonad_Class_Count",2820
-"Ad_Percentage",14
-"Nonad_Percentage",86
-"Class_Imbalance_Ratio",6.14

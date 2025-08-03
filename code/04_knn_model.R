@@ -151,7 +151,7 @@ cat("Recall (ad):", round(recall_ad, 4), "\n")
 cat("F1-score (ad):", round(f1_ad, 4), "\n")
 
 # Plot confusion matrix
-png("../graphics/knn_confusion_matrix.png", width = 600, height = 600)
+png("../graphics/04-knn-confusion_matrix.png", width = 600, height = 600)
 par(mar = c(5, 5, 4, 2))
 image(1:2, 1:2, as.matrix(confusion_matrix), 
       col = c("lightblue", "lightcoral", "orange", "lightgreen"),
@@ -167,7 +167,7 @@ for(i in 1:2) {
   }
 }
 dev.off()
-cat("Confusion matrix plot saved to ../graphics/knn_confusion_matrix.png\n")
+cat("Confusion matrix plot saved to ../graphics/04-knn-confusion_matrix.png\n")
 
 cat("\n=== k-NN MODEL COMPLETED ===\n")
 
