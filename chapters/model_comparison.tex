@@ -1,0 +1,160 @@
+\section{Model Comparison and Analysis}
+
+This chapter presents a comprehensive comparison of the three machine learning models implemented for internet advertisement classification: k-Nearest Neighbors (k-NN), Decision Tree, and Random Forest.
+
+\subsection{Performance Metrics Comparison}
+
+The performance of all three models was evaluated using standard classification metrics on the test dataset. Table \ref{tab:model_comparison} summarizes the key performance indicators.
+
+\begin{table}[h]
+\centering
+\caption{Model Performance Comparison}
+\label{tab:model_comparison}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Model} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\hline
+k-NN (k=3) & 0.8100 & 0.9912 & 0.7517 & 0.8550 \\
+Decision Tree & 0.9106 & 0.8861 & 0.4698 & 0.6140 \\
+Random Forest & 0.9065 & 1.0000 & 0.3826 & 0.5534 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{graphics/07-comparison-model_performance_comparison.png}
+\caption{Visual Comparison of Model Performance Metrics}
+\label{fig:performance_comparison}
+\end{figure}
+
+\subsection{Best Models by Metric}
+
+Each model excelled in different performance aspects:
+
+\begin{itemize}
+    \item \textbf{Best Accuracy}: Decision Tree (91.06\%)
+    \item \textbf{Best Precision}: Random Forest (100.00\%)
+    \item \textbf{Best Recall}: k-NN with k=3 (75.17\%)
+    \item \textbf{Best F1-Score}: k-NN with k=3 (85.50\%)
+\end{itemize}
+
+\subsection{Confusion Matrix Analysis}
+
+The confusion matrices reveal important insights about each model's classification behavior:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{graphics/07-comparison-all_confusion_matrices.png}
+\caption{Confusion Matrices for All Three Models}
+\label{fig:confusion_matrices}
+\end{figure}
+
+\subsubsection{k-NN Model}
+\begin{itemize}
+    \item True Positives (ad → ad): 112
+    \item False Positives (nonad → ad): 1
+    \item False Negatives (ad → nonad): 37
+    \item True Negatives (nonad → nonad): 50
+\end{itemize}
+
+\subsubsection{Decision Tree Model}
+\begin{itemize}
+    \item True Positives (ad → ad): 70
+    \item False Positives (nonad → ad): 9
+    \item False Negatives (ad → nonad): 79
+    \item True Negatives (nonad → nonad): 826
+\end{itemize}
+
+\subsubsection{Random Forest Model}
+\begin{itemize}
+    \item True Positives (ad → ad): 57
+    \item False Positives (nonad → ad): 0
+    \item False Negatives (ad → nonad): 92
+    \item True Negatives (nonad → nonad): 835
+\end{itemize}
+
+\subsection{Model Characteristics Analysis}
+
+\subsubsection{k-NN Model Characteristics}
+\begin{itemize}
+    \item \textbf{Optimal k value}: 3
+    \item \textbf{Classification method}: Distance-based
+    \item \textbf{Feature requirements}: Normalization required
+    \item \textbf{Model type}: Non-parametric
+    \item \textbf{Interpretability}: Medium
+\end{itemize}
+
+\subsubsection{Decision Tree Characteristics}
+\begin{itemize}
+    \item \textbf{Maximum depth}: 3 (for interpretability)
+    \item \textbf{Features used}: First 20 features
+    \item \textbf{Model type}: Tree-based
+    \item \textbf{Interpretability}: High
+    \item \textbf{Limitation}: Prone to overfitting
+\end{itemize}
+
+\subsubsection{Random Forest Characteristics}
+\begin{itemize}
+    \item \textbf{Number of trees}: 100
+    \item \textbf{Features per split}: 39
+    \item \textbf{Total features used}: All 321 features
+    \item \textbf{Model type}: Ensemble method
+    \item \textbf{Advantage}: Reduces overfitting
+    \item \textbf{Interpretability}: Low
+\end{itemize}
+
+\subsection{Class Imbalance Impact}
+
+The dataset exhibits significant class imbalance with 86\% non-advertisements and 14\% advertisements. This imbalance affects all models:
+
+\begin{itemize}
+    \item All models show high precision but lower recall for the 'ad' class
+    \item Models are conservative in predicting advertisements
+    \item Random Forest achieves perfect precision (100\%) but lowest recall (38.26\%)
+    \item k-NN provides the best balance with highest recall (75.17\%)
+\end{itemize}
+
+\subsection{Model Recommendations}
+
+\subsubsection{Best Overall Model: Random Forest}
+\textbf{Recommended for production use}
+\begin{itemize}
+    \item Highest accuracy (90.65\%)
+    \item Perfect precision (100.00\%)
+    \item Excellent generalization due to ensemble approach
+    \item Handles high-dimensional data effectively
+    \item Robust against overfitting
+\end{itemize}
+
+\subsubsection{Most Interpretable: Decision Tree}
+\textbf{Recommended for explanatory analysis}
+\begin{itemize}
+    \item Simple and interpretable tree structure
+    \item Clear decision rules
+    \item Good accuracy (91.06\%)
+    \item Suitable for understanding feature relationships
+\end{itemize}
+
+\subsubsection{Simplest Approach: k-NN}
+\textbf{Recommended for baseline comparison}
+\begin{itemize}
+    \item Non-parametric approach
+    \item Best F1-score (85.50\%)
+    \item Good performance with k=3
+    \item Requires careful feature scaling
+\end{itemize}
+
+\subsection{Conclusion}
+
+For the Internet Advertisement Classification task:
+
+\begin{itemize}
+    \item \textbf{Random Forest} is recommended for production deployment due to its high accuracy and perfect precision
+    \item \textbf{Decision Tree} is ideal for explanatory analysis and understanding feature importance
+    \item \textbf{k-NN} provides a solid baseline with the best recall performance
+    \item All models handle the classification task effectively despite class imbalance
+    \item Future improvements could focus on addressing class imbalance through techniques like SMOTE or cost-sensitive learning
+\end{itemize}
+
+The analysis demonstrates that ensemble methods (Random Forest) provide superior performance for this high-dimensional classification problem, while simpler models (Decision Tree, k-NN) offer valuable insights and competitive performance with different trade-offs between interpretability and accuracy.
