@@ -1,0 +1,170 @@
+\section{Descriptive Statistics}
+\label{sec:descriptive-statistics}
+
+This section presents a comprehensive exploratory data analysis (EDA) of the Internet Advertisements dataset to understand the data distribution, relationships between variables, and key characteristics that will inform our modeling approach.
+
+\subsection{Target Variable Analysis}
+The target variable distribution reveals a significant class imbalance in the dataset:
+\begin{itemize}
+    \item Advertisement images (ad): 459 observations (14\%)
+    \item Non-advertisement images (nonad): 2,820 observations (86\%)
+\end{itemize}
+
+This 1:6 ratio between advertisement and non-advertisement classes is typical in real-world advertisement detection scenarios and must be considered when evaluating model performance.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{graphics/03-eda-target_distribution.png}
+\caption{Distribution of target variable showing class imbalance}
+\label{fig:target-distribution}
+\end{figure}
+
+The target distribution visualization was generated using:
+
+\begin{lstlisting}[language=R]
+# Bar plot for target variable distribution
+target_table <- table(data[[target_col]])
+barplot(target_table, 
+        main = "Distribution of Target Variable",
+        xlab = "Class", ylab = "Frequency",
+        col = c("lightcoral", "lightblue"),
+        border = "black")
+\end{lstlisting}
+
+\subsection{Feature Distribution Analysis}
+To understand the characteristics of individual features, we analyzed the distribution of the first 10 features in the dataset. The summary statistics reveal varying scales and distributions across features:
+
+\begin{table}[H]
+\centering
+\caption{Summary statistics for the first 10 features}
+\label{tab:feature-stats}
+\begin{tabular}{lrrrrrrr}
+\toprule
+\textbf{Feature} & \textbf{Min} & \textbf{Q1} & \textbf{Median} & \textbf{Mean} & \textbf{Q3} & \textbf{Max} & \textbf{SD} \\
+\midrule
+X0 & 1.00 & 32.50 & 51.00 & 60.44 & 61.00 & 640 & 47.06 \\
+X1 & 1.00 & 90.00 & 110.00 & 142.89 & 144.00 & 640 & 112.56 \\
+X2 & 0.00 & 1.28 & 2.10 & 3.41 & 3.90 & 60 & 5.20 \\
+X3 & 0.00 & 1.00 & 1.00 & 0.77 & 1.00 & 1 & 0.42 \\
+X4 & 0.00 & 0.00 & 0.00 & 0.004 & 0.00 & 1 & 0.065 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Histograms for the first six features show diverse distribution patterns:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{graphics/03-eda-histograms.png}
+\caption{Histograms of the first six features showing distribution patterns}
+\label{fig:histograms}
+\end{figure}
+
+The histogram generation code:
+
+\begin{lstlisting}[language=R]
+# Histograms for the first 6 features
+par(mfrow = c(2, 3))
+for(i in 1:6) {
+  hist(data[[i]], 
+       main = paste("Histogram of Feature", i),
+       xlab = paste("Feature", i),
+       ylab = "Frequency",
+       col = "lightblue",
+       border = "black",
+       breaks = 30)
+}
+\end{lstlisting}
+
+\subsection{Class-wise Feature Analysis}
+To understand how features differ between advertisement and non-advertisement classes, we created boxplots comparing the distribution of key features across classes:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{graphics/03-eda-boxplots.png}
+\caption{Boxplots of features 1 and 2 grouped by target class}
+\label{fig:boxplots}
+\end{figure}
+
+The boxplot analysis was implemented as:
+
+\begin{lstlisting}[language=R]
+# Boxplots of features 1 and 2, grouped by target class
+par(mfrow = c(1, 2))
+boxplot(data[[1]] ~ data[[target_col]], 
+        main = "Feature 1 by Class",
+        xlab = "Class", ylab = "Feature 1 Value",
+        col = c("lightcoral", "lightblue"))
+boxplot(data[[2]] ~ data[[target_col]], 
+        main = "Feature 2 by Class",
+        xlab = "Class", ylab = "Feature 2 Value",
+        col = c("lightcoral", "lightblue"))
+\end{lstlisting}
+
+\subsection{Feature Relationships and Scatter Analysis}
+Scatter plots and density plots provide insights into feature relationships and class separability:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{graphics/03-eda-scatter_density_plots.png}
+\caption{Scatter plots and density plots showing feature relationships and class distributions}
+\label{fig:scatter-density}
+\end{figure}
+
+The visualization combines scatter plots and density analysis:
+
+\begin{lstlisting}[language=R]
+# Scatter plots and density plots
+par(mfrow = c(2, 2))
+colors <- c("red", "blue")
+class_colors <- colors[as.numeric(data[[target_col]])]
+plot(data[[1]], data[[2]], 
+     main = "Feature 1 vs Feature 2", 
+     xlab = "Feature 1", ylab = "Feature 2", 
+     col = class_colors, pch = 16)
+legend("topright", legend = levels(data[[target_col]]), 
+       col = colors, pch = 16)
+\end{lstlisting}
+
+\subsection{Correlation Analysis}
+Correlation analysis reveals important relationships between features. The correlation heatmap for the first 10 features shows the strength of linear relationships:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{graphics/03-eda-correlation_heatmap.png}
+\caption{Correlation heatmap of the first 10 features}
+\label{fig:correlation-heatmap}
+\end{figure}
+
+The correlation analysis identified several perfect correlations (correlation = 1.0) between different feature pairs, indicating potential redundancy in the dataset:
+\begin{itemize}
+    \item Features X11 and X14: Perfect positive correlation
+    \item Features X8 and X15: Perfect positive correlation
+    \item Features X13 and X38: Perfect positive correlation
+    \item Features X44 and X46: Perfect positive correlation
+\end{itemize}
+
+The correlation matrix was computed using:
+
+\begin{lstlisting}[language=R]
+# Correlation heatmap for the first 10 numeric features
+numeric_data <- data[, sapply(data, is.numeric)]
+cor_matrix <- cor(numeric_data[, 1:10], use = "complete.obs")
+heatmap(cor_matrix, 
+        symm = TRUE, 
+        main = "Correlation Heatmap of First 10 Features",
+        col = colorRampPalette(c("blue", "white", "red"))(100))
+\end{lstlisting}
+
+\subsection{Key Findings from Descriptive Analysis}
+The exploratory data analysis reveals several important characteristics:
+
+\begin{enumerate}
+    \item \textbf{Class Imbalance}: The dataset has a significant imbalance with 86\% non-advertisements
+    \item \textbf{Feature Diversity}: Features show diverse scales and distributions, suggesting the need for normalization
+    \item \textbf{Perfect Correlations}: Multiple feature pairs show perfect correlation, indicating potential redundancy
+    \item \textbf{Class Separability}: Some features show different distributions between advertisement and non-advertisement classes
+    \item \textbf{High Dimensionality}: With 1,559 features, dimensionality reduction techniques may be beneficial
+\end{enumerate}
+
+These findings will inform our modeling approach, particularly regarding feature selection, data preprocessing, and evaluation metrics that account for class imbalance.

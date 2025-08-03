@@ -1,0 +1,92 @@
+\section{Data Description}
+\label{sec:data_description}
+
+\subsection{Dataset Overview}
+The dataset used in this project is the "Internet Advertisements Data Set" from the UCI Machine Learning Repository. This dataset contains information about internet images and their classification as advertisements or non-advertisements.
+
+The original dataset consists of 3,279 observations with 1,560 columns. The first column serves as an index and is removed during preprocessing, leaving 1,559 features for analysis. The target variable, located in the last column (X1558), indicates whether an image is an advertisement ('ad.') or not ('nonad.').
+
+\subsection{Data Loading}
+The dataset is loaded from a CSV file using the following R code:
+
+\begin{lstlisting}[language=R]
+# Load the dataset from the CSV file
+data <- read.csv("../add.csv", header = TRUE, stringsAsFactors = FALSE)
+
+# Identify the target column name
+target_col <- names(data)[ncol(data)]
+\end{lstlisting}
+
+\subsection{Target Variable Distribution}
+The target variable shows a significant class imbalance:
+\begin{itemize}
+    \item Advertisement images (ad): 459 observations (14\%)
+    \item Non-advertisement images (nonad): 2,820 observations (86\%)
+\end{itemize}
+
+This imbalance is typical in advertisement detection problems and will need to be considered when building and evaluating classification models.
+
+\subsection{Missing Values}
+The dataset contains missing values represented as "?" strings. Initial analysis revealed:
+\begin{itemize}
+    \item Total missing values: 15 occurrences
+    \item All missing values are concentrated in column 5
+    \item Missing values represent approximately 0.46\% of column 5's data
+\end{itemize}
+
+\subsection{Data Preprocessing}
+Several preprocessing steps were applied to prepare the data for analysis:
+
+\begin{lstlisting}[language=R]
+# 1. Remove the first column which is an unnecessary index
+data <- data[, -1]
+
+# 2. Handle missing values represented by "?"
+# Convert "?" to NA for all feature columns
+for(i in 1:(ncol(data)-1)) {
+  data[[i]] <- as.numeric(ifelse(data[[i]] == "?", NA, data[[i]]))
+}
+
+# 3. Impute missing values using the median of each column
+for(i in 1:(ncol(data)-1)) {
+  if(any(is.na(data[[i]]))) {
+    median_val <- median(data[[i]], na.rm = TRUE)
+    data[[i]][is.na(data[[i]])] <- median_val
+  }
+}
+
+# 4. Clean and format the target variable
+data[[target_col]] <- factor(data[[target_col]], 
+                            levels = c("ad.", "nonad."), 
+                            labels = c("ad", "nonad"))
+\end{lstlisting}
+
+The preprocessing pipeline includes:
+\begin{enumerate}
+    \item \textbf{Index removal}: The first column containing row indices was removed
+    \item \textbf{Missing value handling}: All "?" strings were converted to NA values
+    \item \textbf{Median imputation}: Missing values were replaced with the median of their respective columns
+    \item \textbf{Target variable formatting}: The target variable was converted to a factor with clear labels ("ad" and "nonad")
+\end{enumerate}
+
+\subsection{Final Dataset Characteristics}
+After preprocessing, the cleaned dataset has the following properties:
+\begin{itemize}
+    \item Dimensions: 3,279 rows × 1,559 columns
+    \item All missing values have been imputed
+    \item Target variable is properly formatted as a factor
+    \item All feature columns are numeric
+    \item Class distribution remains: 459 advertisements, 2,820 non-advertisements
+\end{itemize}
+
+\subsection{Basic Statistics}
+Preliminary statistics for the first five feature columns show:
+\begin{itemize}
+    \item Column 1: Mean = 1,639, Median = 1,639, SD = 946.71
+    \item Column 2: Mean = 64.02, Median = 51, SD = 54.87
+    \item Column 3: Mean = 155.34, Median = 110, SD = 130.03
+    \item Column 4: Mean = 3.91, Median = 2.1, SD = 6.04
+    \item Column 5: Mean = 0.77, Median = 1, SD = 0.42
+\end{itemize}
+
+These statistics indicate varying scales across features, suggesting that normalization or standardization may be beneficial for certain machine learning algorithms.
