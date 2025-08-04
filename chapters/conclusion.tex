@@ -45,7 +45,7 @@ Each algorithm demonstrated excellence in different performance aspects:
     \item \textbf{Perfect Precision:} Random Forest (100.00\%)
     \item \textbf{Best Recall:} k-NN with k=3 (75.17\%)
     \item \textbf{Best F1-Score:} k-NN with k=3 (85.50\%)
-    \item \textbf{Overall Best Performance:} k-NN with k=3, chosen for its superior F1-Score, which indicates the best balance between precision and recall among the models.
+    \item \textbf{Best Overall for Production:} Random Forest, chosen for its perfect precision and strong overall accuracy, making it ideal for applications where false positives are highly undesirable.
 \end{itemize}
 
 \subsection{Algorithm Analysis}
@@ -93,25 +93,25 @@ Each algorithm demonstrated excellence in different performance aspects:
 Based on the performance analysis, different models are recommended for specific use cases:
 
 \begin{enumerate}
-    \item \textbf{For General-Purpose Classification:} k-NN (k=3)
+    \item \textbf{For Production Use (Best Overall):} Random Forest
     \begin{itemize}
-        \item Best overall F1-score balance
-        \item Suitable for applications requiring both precision and recall
-        \item Recommended for research and comparative studies
+        \item Perfect precision (100\%) eliminates false positives, which is critical for user trust.
+        \item Excellent accuracy (90.65\%) and generalization capabilities.
+        \item Recommended for deployment in live ad-blocking systems where accuracy and reliability are paramount.
     \end{itemize}
     
-    \item \textbf{For High-Accuracy Requirements:} Decision Tree
+    \item \textbf{For Explanatory Analysis:} Decision Tree
     \begin{itemize}
-        \item Highest classification accuracy (91.06\%)
-        \item Excellent interpretability for decision explanation
-        \item Suitable for applications requiring transparent decision logic
+        \item Highest classification accuracy (91.06\%) combined with high interpretability.
+        \item Suitable for understanding the key features that drive classification.
+        \item Ideal when the decision-making process must be transparent to stakeholders.
     \end{itemize}
     
-    \item \textbf{For Conservative Ad-Blocking Systems:} Random Forest
+    \item \textbf{For Balanced Performance (Baseline):} k-NN (k=3)
     \begin{itemize}
-        \item Perfect precision eliminates false positive advertisements
-        \item Ideal for applications where false positives are costly
-        \item Suitable for automated content filtering systems
+        \item Best F1-score (85.50\%), indicating the most balanced trade-off between precision and recall.
+        \item Highest recall (75.17\%), making it suitable for scenarios where finding as many ads as possible is the priority.
+        \item Serves as a strong non-parametric baseline for comparison.
     \end{itemize}
 \end{enumerate}
 
@@ -179,13 +179,13 @@ This Internet Advertisement Classification project successfully achieved its pri
 The study revealed several important insights:
 
 \begin{enumerate}
-    \item \textbf{Algorithm Diversity:} Different algorithms excel in different performance aspects, highlighting the importance of application-specific model selection
+    \item \textbf{Algorithm Diversity:} Different algorithms excel in different performance aspects, highlighting the importance of application-specific model selection.
     
-    \item \textbf{Trade-off Analysis:} The precision-recall trade-off is clearly demonstrated, with Random Forest achieving perfect precision at the cost of lower recall
+    \item \textbf{Trade-off Analysis:} The precision-recall trade-off is clearly demonstrated, with Random Forest achieving perfect precision at the cost of lower recall, while k-NN provides a better balance.
     
-    \item \textbf{Balanced Performance:} k-NN emerged as the most balanced performer, making it suitable for general-purpose applications
+    \item \textbf{Superior Precision for Production:} Random Forest's ensemble method delivered perfect precision, making it the most reliable model for production systems where false positives are costly.
     
-    \item \textbf{Interpretability vs. Performance:} Decision Trees offer excellent interpretability while maintaining competitive accuracy
+    \item \textbf{Interpretability vs. Performance:} Decision Trees offer excellent interpretability while maintaining the highest accuracy, proving their value in explanatory analysis.
 \end{enumerate}
 
 \subsubsection{Impact and Significance}
