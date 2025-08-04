@@ -22,10 +22,8 @@ required_csvs <- c(
   "target_distribution.csv", 
   "feature_statistics.csv",
   "data_cleaning_steps.csv",
-  "comprehensive_feature_statistics.csv",
-  "correlation_analysis_summary.csv",
-  "data_distribution_summary.csv",
-  "visualizations_summary.csv",
+  "descriptive_statistics.csv",
+  "top_correlations.csv",
   "model_performance_comparison.csv",
   "confusion_matrices.csv",
   "model_characteristics.csv",
@@ -52,10 +50,8 @@ dataset_overview <- read.csv("dataset_overview.csv", stringsAsFactors = FALSE)
 target_distribution <- read.csv("target_distribution.csv", stringsAsFactors = FALSE)
 feature_statistics <- read.csv("feature_statistics.csv", stringsAsFactors = FALSE)
 data_cleaning_steps <- read.csv("data_cleaning_steps.csv", stringsAsFactors = FALSE)
-comprehensive_feature_stats <- read.csv("comprehensive_feature_statistics.csv", stringsAsFactors = FALSE)
-correlation_summary <- read.csv("correlation_analysis_summary.csv", stringsAsFactors = FALSE)
-distribution_summary <- read.csv("data_distribution_summary.csv", stringsAsFactors = FALSE)
-visualizations_summary <- read.csv("visualizations_summary.csv", stringsAsFactors = FALSE)
+descriptive_statistics <- read.csv("descriptive_statistics.csv", stringsAsFactors = FALSE)
+top_correlations <- read.csv("top_correlations.csv", stringsAsFactors = FALSE)
 model_performance <- read.csv("model_performance_comparison.csv", stringsAsFactors = FALSE)
 confusion_matrices <- read.csv("confusion_matrices.csv", stringsAsFactors = FALSE)
 model_characteristics <- read.csv("model_characteristics.csv", stringsAsFactors = FALSE)
@@ -119,18 +115,18 @@ cat("- Standard deviation: High variability across features\n")
 cat("- Range: Features span different scales (normalization applied for k-NN)\n")
 
 cat("\nVisualizations Generated:\n")
-for(i in 1:nrow(visualizations_summary)) {
-  viz <- visualizations_summary[i, ]
-  cat(paste0(i, ". ", viz$Description, " (", viz$Filename, ")\n"))
-}
+cat("1. Target variable distribution plot (03-eda-target_distribution.png)\n")
+cat("2. Feature histograms for first 6 features (03-eda-histograms.png)\n")
+cat("3. Boxplots by class for features 1-2 (03-eda-boxplots.png)\n")
+cat("4. Scatter and density plots (03-eda-scatter_density_plots.png)\n")
+cat("5. Correlation heatmap for first 10 features (03-eda-correlation_heatmap.png)\n")
 
 cat("\nCorrelation Analysis:\n")
-cor_info <- correlation_summary
-cat("- Analyzed correlation matrix for", cor_info$Value[cor_info$Analysis == "Features_Analyzed"], "features\n")
-max_cor <- cor_info$Value[cor_info$Analysis == "Max_Correlation"]
-high_cors <- cor_info$Value[cor_info$Analysis == "High_Correlations_Found"]
+cat("- Analyzed correlation matrix for", ncol(descriptive_statistics), "features\n")
+max_cor <- max(abs(top_correlations$Correlation), na.rm = TRUE)
+high_cors <- sum(abs(top_correlations$Correlation) > 0.7, na.rm = TRUE)
 if(high_cors > 0) {
-  cat("- Maximum correlation found:", max_cor, "\n")
+  cat("- Maximum correlation found:", round(max_cor, 3), "\n")
   cat("- High correlations (|r| > 0.7) detected:", high_cors, "\n")
 } else {
   cat("- No high correlations (|r| > 0.7) detected\n")

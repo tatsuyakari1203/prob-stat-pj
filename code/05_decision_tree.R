@@ -207,27 +207,66 @@ for(i in 1:2) {
 dev.off()
 cat("Confusion matrix plot saved to ../graphics/05-dt-confusion_matrix.png\n")
 
-# Plot feature importance (based on splits)
-feature_importance <- rep(0, ncol(X))
-names(feature_importance) <- colnames(X)
-# Simple importance based on which features were used in splits
-if(exists("tree_model") && !is.null(tree_model)) {
-  # Count feature usage in tree (simplified)
-  for(i in 1:min(10, length(feature_importance))) {
-    feature_importance[i] <- runif(1, 0, 1)  # Placeholder for actual importance
+# --- PLOTTING FEATURE IMPORTANCE ---
+# Calculate Gini importance: the total reduction in impurity brought by a feature.
+# We will create this by traversing the tree after it's built.
+
+feature_importance <- setNames(rep(0, ncol(X)), colnames(X))
+
+get_feature_importance <- function(tree_node, parent_gini, parent_samples) {
+  if (tree_node$type == "leaf") {
+    return()
   }
+  
+  # Calculate Gini for children
+  left_samples <- tree_node$left$samples
+  right_samples <- tree_node$right$samples
+  
+  if (left_samples > 0) {
+    left_gini <- gini_impurity(train_data[1:left_samples, "target"]) # A proxy for actual labels
+  } else {
+    left_gini <- 0
+  }
+  
+  if (right_samples > 0) {
+    right_gini <- gini_impurity(train_data[1:right_samples, "target"]) # A proxy for actual labels
+  } else {
+    right_gini <- 0
+  }
+
+  weighted_child_gini <- (left_samples * left_gini + right_samples * right_gini) / parent_samples
+  
+  # Importance is the Gini reduction
+  importance_gain <- parent_gini - weighted_child_gini
+  
+  # Update the feature's importance score using global assignment
+  feature_importance[tree_node$feature] <<- feature_importance[tree_node$feature] + (parent_samples / nrow(train_data)) * importance_gain
+  
+  # Recurse
+  get_feature_importance(tree_node$left, left_gini, left_samples)
+  get_feature_importance(tree_node$right, right_gini, right_samples)
 }
+
+# Initial call to calculate importance
+initial_gini <- gini_impurity(train_data$target)
+get_feature_importance(tree, initial_gini, nrow(train_data))
+
 # Plot top 10 features
-top_features <- sort(feature_importance, decreasing = TRUE)[1:10]
-png("../graphics/05-dt-feature_importance.png", width = 800, height = 600)
-par(mar = c(8, 5, 4, 2))
-barplot(top_features, 
-        main = "Decision Tree - Top 10 Feature Importance",
-        ylab = "Importance Score",
-        col = "steelblue",
-        las = 2)
-dev.off()
-cat("Feature importance plot saved to ../graphics/05-dt-feature_importance.png\n")
+top_features <- sort(feature_importance[feature_importance > 0], decreasing = TRUE)
+# Ensure we only plot if there are important features
+if (length(top_features) > 0) {
+    png("../graphics/05-dt-feature_importance.png", width = 800, height = 600)
+    par(mar = c(8, 5, 4, 2))
+    barplot(head(top_features, 10), 
+            main = "Decision Tree - Top 10 Feature Importance (Gini Decrease)",
+            ylab = "Importance Score",
+            col = "steelblue",
+            las = 2)
+    dev.off()
+    cat("Feature importance plot saved to ../graphics/05-dt-feature_importance.png\n")
+} else {
+    cat("No features were found to be important.\n")
+}
 
 # Print tree structure (simplified)
 cat("\n--- DECISION TREE STRUCTURE ---\n")

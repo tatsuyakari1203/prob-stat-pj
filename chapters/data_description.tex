@@ -2,9 +2,16 @@
 \label{sec:data_description}
 
 \subsection{Raw Dataset Overview}
-The dataset used in this project is the "Internet Advertisements Data Set" from the UCI Machine Learning Repository. This dataset contains information about internet images and their classification as advertisements or non-advertisements.
+The dataset for this project is the "Internet Advertisements Data Set" from the UCI Machine Learning Repository. It contains 3,279 instances, where the task is to classify each image as an advertisement ("ad") or not ("nonad").
 
-The original dataset consists of 3,279 observations with 1,560 columns. The first column (X) serves as an index and is removed during preprocessing, leaving 1,559 features for analysis. The target variable, located in the last column (X1558), indicates whether an image is an advertisement ('ad.') or not ('nonad.').
+Based on the official documentation, the 1,559 features provided for classification can be summarized into three main categories:
+\begin{itemize}
+    \item \textbf{Geometric Properties:} Three continuous features representing the image's height, width, and aspect ratio.
+    \item \textbf{Phrase-based Features:} Over 1,500 binary features indicating the presence of specific advertising-related words or phrases in the image's URL, alt text, and surrounding text.
+    \item \textbf{URL-based Features:} A smaller set of binary features derived from keywords within the page and image URLs.
+\end{itemize}
+
+The target variable, indicating the class, is located in the final column of the dataset.
 
 \textbf{Initial Dataset Characteristics:}
 \begin{itemize}

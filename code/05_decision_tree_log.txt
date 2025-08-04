@@ -40,8 +40,7 @@ F1-score (ad): 0.614
 null device 
           1 
 Confusion matrix plot saved to ../graphics/05-dt-confusion_matrix.png
-null device 
-          1 
+NULL
 Feature importance plot saved to ../graphics/05-dt-feature_importance.png
 
 --- DECISION TREE STRUCTURE ---

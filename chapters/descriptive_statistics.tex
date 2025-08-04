@@ -127,24 +127,33 @@ legend("topright", legend = levels(data[[target_col]]),
 \end{lstlisting}
 
 \subsection{Correlation Analysis}
-Correlation analysis reveals important relationships between features. The correlation heatmap for the first 10 features shows the strength of linear relationships:
+Correlation analysis is a statistical method used to evaluate the strength and direction of the linear relationship between two numeric variables. To understand these relationships within our dataset, we computed the correlation matrix for the numeric features and visualized it as a heatmap.
+
+A heatmap represents the correlation matrix graphically, where the color of each cell indicates the correlation coefficient between two features. In our analysis:
+\begin{itemize}
+    \item A strong positive correlation (close to +1, shown in red) means that as one feature increases, the other tends to increase as well.
+    \item A strong negative correlation (close to -1, shown in blue) means that as one feature increases, the other tends to decrease.
+    \item A correlation near 0 (shown in white) indicates a weak or nonexistent linear relationship.
+\end{itemize}
+
+The heatmap for the first 10 features is shown below as an illustrative example.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{graphics/03-eda-correlation_heatmap.png}
+\includegraphics[width=0.6\textwidth]{graphics/03-eda-correlation_heatmap.png}
 \caption{Correlation heatmap of the first 10 features}
 \label{fig:correlation-heatmap}
 \end{figure}
 
-The correlation analysis identified several perfect correlations (correlation = 1.0) between different feature pairs, indicating potential redundancy in the dataset:
+While the initial heatmap provides a glimpse, a broader analysis across the dataset identified several pairs of features with a perfect correlation of 1.0. This is a critical finding, as it indicates multicollinearity—a situation where features are redundant because they contain the same information. Such redundancy can negatively impact some machine learning models. The most notable pairs found were:
 \begin{itemize}
-    \item Features X11 and X14: Perfect positive correlation
-    \item Features X8 and X15: Perfect positive correlation
-    \item Features X13 and X38: Perfect positive correlation
-    \item Features X44 and X46: Perfect positive correlation
+    \item Features X11 and X14
+    \item Features X8 and X15
+    \item Features X13 and X38
+    \item Features X44 and X46
 \end{itemize}
 
-The correlation matrix was computed using:
+This finding suggests that for future modeling, one feature from each pair could potentially be removed to simplify the model without losing predictive information. The R code used to generate the example heatmap is as follows:
 
 \begin{lstlisting}[language=R]
 # Correlation heatmap for the first 10 numeric features

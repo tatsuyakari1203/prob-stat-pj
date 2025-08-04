@@ -4,7 +4,7 @@
 
 \subsubsection{Data Preparation}
 
-Similar to the k-NN model, we use the first 20 features from the dataset to ensure model interpretability. The data is split into training (70\%) and testing (30\%) sets with 2295 and 984 samples respectively.
+Similar to the k-NN model, we use the first 20 features from the dataset to ensure model interpretability. The data is split into training (70\%) and testing (30\%) sets, resulting in 2,295 training samples (310 'ad', 1,985 'nonad') and 984 test samples (149 'ad', 835 'nonad').
 
 \subsubsection{Gini Impurity Function}
 
@@ -110,7 +110,7 @@ build_simple_tree <- function(data, target_col, max_depth = 3,
 
 \subsubsection{Training Results}
 
-The decision tree model achieved the following results:
+The decision tree model demonstrated strong performance, achieving a training accuracy of 93.46\% and a test accuracy of 91.06\%. These results, summarized in the table below, indicate that the model generalizes well from the training data to the unseen test data without significant overfitting.
 
 \begin{table}[h]
 \centering
@@ -240,7 +240,7 @@ Similar to k-NN, the decision tree model is also affected by class imbalance in 
 
 \subsection{Conclusion}
 
-The Decision Tree model achieved outstanding performance in Internet advertisement classification with 91.06\% accuracy on the test set, making it the best performing model among those tested. The model demonstrated high precision of 88.61\% and moderate recall of 46.98\% for advertisement detection, resulting in an F1-score of 61.4\%. 
+The Decision Tree model achieved strong performance in Internet advertisement classification with 91.06\% accuracy on the test set, the highest among the models tested. The model demonstrated high precision of 88.61\% and moderate recall of 46.98\% for advertisement detection, resulting in an F1-score of 61.4\%. 
 
 Key findings from the implementation:
 \begin{itemize}

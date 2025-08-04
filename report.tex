@@ -1,6 +1,7 @@
 % 'draft' mode can be used to speed up compilation
-\documentclass[twoside,final]{hcmut-report}
+\documentclass[twoside,final,11pt]{hcmut-report}
 \usepackage{codespace}
+\lstset{basicstyle=\footnotesize\ttfamily}
 
 % Draft watermark
 % https://github.com/callegar/LaTeX-draftwatermark
@@ -20,6 +21,10 @@
 
 % Add options for figures, like max width, framing, etc.
 \usepackage[export]{adjustbox}
+
+% Reduce line spacing
+\usepackage{setspace}
+\setstretch{0.9}
 
 % References
 % Use \Cref{} instead of \ref{}
