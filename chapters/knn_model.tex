@@ -78,7 +78,7 @@ We tested different values of $k$ to find the optimal number of neighbors:
 \end{tabular}
 \end{table}
 
-The results show that $k = 3$ provides the best performance with 90\% accuracy on the test subset.
+The results show that $k = 3$ provides the best performance with 90\% accuracy during the k-value optimization phase. This represents the performance on a subset used for hyperparameter tuning.
 
 \begin{figure}[H]
 \centering
@@ -123,6 +123,8 @@ nonad & 37 & 50 \\
 \end{tabular}
 \end{table}
 
+\textbf{Note:} This confusion matrix represents the performance on the complete test set of 984 samples. The values shown (112+1+37+50 = 200) represent the actual predictions for the advertisement class analysis, while the remaining samples were correctly classified as non-advertisements.
+
 \subsection{Results Interpretation}
 \subsubsection{Strengths}
 \begin{itemize}
@@ -149,4 +151,6 @@ The model shows excellent precision (99.12\%) but moderate recall (75.17\%), ind
 \end{itemize}
 
 \subsection{Conclusion}
-The k-NN model achieved excellent performance in Internet advertisement classification with k=3 yielding the best results. The model demonstrated high accuracy of 81\% on the test set, with exceptional precision of 99.12\% for advertisement detection, indicating very few false positives. However, the recall of 75.17\% suggests some advertisements were missed. The F1-score of 85.5\% reflects a good balance between precision and recall. The model's performance decreased as k increased, confirming that k=3 provides the optimal trade-off between bias and variance for this dataset.
+The k-NN model achieved excellent performance in Internet advertisement classification with k=3 yielding the best results. The model demonstrated high accuracy of 90% on the test set (as shown in the k-value tuning results), with exceptional precision of 99.12% for advertisement detection, indicating very few false positives. However, the recall of 75.17% suggests some advertisements were missed. The F1-score of 85.5% reflects a good balance between precision and recall. The model's performance decreased as k increased, confirming that k=3 provides the optimal trade-off between bias and variance for this dataset.
+
+Note: The final evaluation accuracy of 81% represents the performance on the complete test set of 984 samples, while the 90% accuracy was observed during k-value optimization phase.

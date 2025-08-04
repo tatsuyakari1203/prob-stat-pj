@@ -98,7 +98,7 @@ The confusion matrices reveal important insights about each model's classificati
 \begin{itemize}
     \item \textbf{Number of trees}: 100
     \item \textbf{Features per split}: 39
-    \item \textbf{Total features used}: All 321 features
+    \item \textbf{Total features used}: All 1558 features
     \item \textbf{Model type}: Ensemble method
     \item \textbf{Advantage}: Reduces overfitting
     \item \textbf{Interpretability}: Low
@@ -127,6 +127,13 @@ The dataset exhibits significant class imbalance with 86\% non-advertisements an
     \item Robust against overfitting
 \end{itemize}
 
+\textbf{Trade-off Analysis:} While Random Forest achieves perfect precision (100\%), it comes at the cost of lower recall (38.26\%). In the context of advertisement detection, this trade-off is often desirable because:
+\begin{itemize}
+    \item \textbf{False positives are costly:} Incorrectly blocking legitimate content (non-ads classified as ads) creates poor user experience
+    \item \textbf{False negatives are tolerable:} Missing some advertisements is less problematic than blocking legitimate content
+    \item \textbf{Production reliability:} Perfect precision ensures that when the model flags content as an advertisement, it is always correct
+\end{itemize}
+
 \subsubsection{Most Interpretable: Decision Tree}
 \textbf{Recommended for explanatory analysis}
 \begin{itemize}
@@ -140,9 +147,16 @@ The dataset exhibits significant class imbalance with 86\% non-advertisements an
 \textbf{Recommended for baseline comparison}
 \begin{itemize}
     \item Non-parametric approach
-    \item Best F1-score (85.50\%)
+    \item Best F1-score (85.50\%) and recall (75.17\%)
     \item Good performance with k=3
     \item Requires careful feature scaling
+\end{itemize}
+
+\textbf{Balanced Performance:} k-NN demonstrates the best balance between precision (99.12\%) and recall (75.17\%), making it ideal when:
+\begin{itemize}
+    \item \textbf{Comprehensive detection is needed:} Higher recall means fewer advertisements are missed
+    \item \textbf{Balanced approach is preferred:} The high F1-score indicates optimal harmony between precision and recall
+    \item \textbf{Simplicity is valued:} Non-parametric nature requires minimal assumptions about data distribution
 \end{itemize}
 
 \subsection{Conclusion}
