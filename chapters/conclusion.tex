@@ -19,6 +19,14 @@ The analysis was conducted on a comprehensive dataset containing:
 
 \subsubsection{Model Performance Comparison}
 
+To evaluate the models, we used four standard metrics, each providing a different perspective on performance:
+\begin{itemize}
+    \item \textbf{Accuracy:} Measures the overall correctness of the model. It is the ratio of correctly predicted images to the total number of images.
+    \item \textbf{Precision:} Answers the question: "Of all the images that the model labeled as an ad, how many were actually ads?" A high precision is crucial when the cost of a false positive (incorrectly blocking a non-ad) is high.
+    \item \textbf{Recall (Sensitivity):} Answers the question: "Of all the actual ads, how many did the model correctly identify?" High recall is important when the goal is to miss as few ads as possible.
+    \item \textbf{F1-Score:} The harmonic mean of Precision and Recall. It provides a single score that balances the two, and is particularly useful for datasets with a class imbalance.
+\end{itemize}
+
 The comprehensive evaluation revealed distinct performance characteristics for each algorithm:
 
 \begin{table}[h]
@@ -204,5 +212,3 @@ This work provides empirical evidence that machine learning can effectively clas
 The Internet Advertisement Classification project demonstrates the practical power of machine learning in solving real-world problems. By implementing and comparing three distinct algorithms, this study provides valuable insights into the strengths and limitations of different approaches to binary classification tasks.
 
 The results show that while no single algorithm dominates across all metrics, each method offers unique advantages that make it suitable for specific applications. This finding underscores the importance of understanding both the technical characteristics of algorithms and the practical requirements of the target application when selecting machine learning approaches.
-
-Future work should focus on advanced feature engineering, ensemble methods, and real-time implementation to further enhance the practical applicability of these findings in production environments.
