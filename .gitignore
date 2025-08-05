@@ -13,6 +13,11 @@
 *.out
 *.toc
 *.pyg
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
 
 # Generated data and graphics
 code/*.RData
@@ -21,3 +26,7 @@ graphics/*.pdf
 
 # Other
 .crush/
+
+# Generated output files
+*_log.txt
+*.csv

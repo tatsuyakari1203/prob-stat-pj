@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<best_practices>
+  <general_principles>
+    <principle priority="high">
+      <name>Modularity</name>
+      <description>Keep all main content within separate files in the 'chapters/' directory. The main 'report.tex' file should only be used for preamble configuration, package loading, and including the chapter files.</description>
+      <rationale>This improves organization, reduces merge conflicts, and makes the document easier to manage.</rationale>
+      <example>
+        <scenario>Adding a new section about data analysis.</scenario>
+        <good>Create 'chapters/data_analysis.tex' and add '\input{chapters/data_analysis.tex}' to 'report.tex'.</good>
+        <bad>Writing the entire data analysis section directly inside 'report.tex'.</bad>
+      </example>
+    </principle>
+    <principle priority="medium">
+      <name>Use Semantic Commands</name>
+      <description>Utilize the custom commands provided by 'hcmut-report.cls' (e.g., \title, \coursename, \advisor) for metadata. Avoid hardcoding this information.</description>
+      <rationale>Ensures consistency on the cover page and allows for easy updates.</rationale>
+    </principle>
+  </general_principles>
+
+  <code_conventions>
+    <convention category="figures">
+      <rule>Place all image files in the 'graphics/' directory. Use consistent and descriptive labels for figures (e.g., fig:model-architecture).</rule>
+    </convention>
+    <convention category="tables">
+      <rule>Use the 'booktabs' package (\toprule, \midrule, \bottomrule) for professional-looking tables. Use descriptive labels (e.g., tab:performance-metrics).</rule>
+    </convention>
+    <convention category="references">
+      <rule>Use the 'cleveref' package's \Cref command for cross-referencing to automatically include the type of reference (e.g., "Figure 1.1" instead of just "1.1").</rule>
+    </convention>
+     <convention category="bibliography">
+      <rule>Add all bibliographic entries to 'refs/example.bib'. Do not manually create a bibliography section.</rule>
+    </convention>
+  </code_conventions>
+
+  <quality_checklist>
+    <category name="before_completion">
+      <item>Ensure all \input commands in 'report.tex' point to existing files.</item>
+      <item>Run 'latexmk -c' to clean up auxiliary files after a successful compilation.</item>
+      <item>Verify that all figures, tables, and listings have captions and are referenced in the text.</item>
+    </category>
+  </quality_checklist>
+</best_practices>

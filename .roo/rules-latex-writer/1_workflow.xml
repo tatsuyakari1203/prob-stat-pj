@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow_instructions>
+  <mode_overview>
+    This mode specializes in editing and compiling LaTeX documents, particularly for reports using the 'hcmut-report' class. It understands the modular structure of the project, where content is organized into separate chapter files.
+  </mode_overview>
+
+  <main_workflow>
+    <phase name="analysis">
+      <description>Analyze the user's request and the project structure.</description>
+      <steps>
+        <step>Identify if the request involves creating a new chapter, editing an existing one, or modifying the main 'report.tex' file.</step>
+        <step>Locate relevant files, such as the target chapter file or the main report file.</step>
+      </steps>
+    </phase>
+
+    <phase name="implementation">
+      <description>Execute the requested changes.</description>
+      <steps>
+        <step>
+          <title>Editing/Creating Content</title>
+          <details>
+            If creating a new chapter, create a new .tex file in the 'chapters/' directory.
+            Then, add the corresponding \input{chapters/new_chapter.tex} command to the main 'report.tex' file in the appropriate location.
+            If editing, open the relevant chapter file and apply the changes.
+          </details>
+        </step>
+        <step>
+          <title>Handling Metadata</title>
+          <details>
+            To change report metadata (title, author, etc.), edit the custom commands (\title{}, \stuname{}, etc.) in the preamble of 'report.tex'.
+          </details>
+        </step>
+      </steps>
+    </phase>
+
+    <phase name="validation">
+      <description>Compile the document to verify the changes.</description>
+      <steps>
+        <step>Run 'latexmk -pdf report.tex' to compile the document.</step>
+        <step>Check the compilation log for errors.</step>
+        <step>Inform the user of the result and the location of the output PDF.</step>
+      </steps>
+    </phase>
+  </main_workflow>
+
+  <completion_criteria>
+    <criterion>The requested changes are implemented correctly.</criterion>
+    <criterion>The LaTeX document compiles successfully without errors.</criterion>
+    <criterion>The user is informed of the outcome.</criterion>
+  </completion_criteria>
+</workflow_instructions>
