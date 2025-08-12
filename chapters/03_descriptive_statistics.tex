@@ -4,30 +4,542 @@
 
 \section{Descriptive Statistics}
 
+This chapter presents a comprehensive descriptive statistical analysis of the 3D printer dataset. The analysis includes summary statistics, distribution analysis through histograms, group comparisons using boxplots, relationship exploration via scatter plots, and correlation analysis to understand the interdependencies between variables.
+
 \subsection{Summary Statistics}
-% R code for calculating descriptive statistics
-% Tables showing mean, median, standard deviation, etc.
-% Statistics for all continuous variables
 
-\subsection{Data Visualization}
+Comprehensive descriptive statistics were calculated for all continuous variables in the dataset to understand their central tendencies, variability, and distribution characteristics.
 
-\subsubsection{Histograms}
-% R code for creating histograms
-% Distribution analysis of key variables
+\begin{lstlisting}[language=R, caption={Comprehensive Descriptive Statistics Calculation}, label={lst:descriptive_stats}]
+# Function to calculate comprehensive descriptive statistics
+calc_descriptive_stats <- function(x, var_name) {
+  # Calculate skewness manually
+  n <- length(x)
+  x_mean <- mean(x, na.rm = TRUE)
+  x_sd <- sd(x, na.rm = TRUE)
+  skewness <- sum((x - x_mean)^3, na.rm = TRUE) / ((n - 1) * x_sd^3)
+  
+  # Calculate kurtosis manually
+  kurtosis <- sum((x - x_mean)^4, na.rm = TRUE) / ((n - 1) * x_sd^4) - 3
+  
+  stats <- data.frame(
+    Variable = var_name,
+    Count = length(x),
+    Mean = round(mean(x, na.rm = TRUE), 3),
+    Median = round(median(x, na.rm = TRUE), 3),
+    SD = round(sd(x, na.rm = TRUE), 3),
+    Variance = round(var(x, na.rm = TRUE), 3),
+    Min = round(min(x, na.rm = TRUE), 3),
+    Max = round(max(x, na.rm = TRUE), 3),
+    Range = round(max(x, na.rm = TRUE) - min(x, na.rm = TRUE), 3),
+    Q1 = round(quantile(x, 0.25, na.rm = TRUE), 3),
+    Q3 = round(quantile(x, 0.75, na.rm = TRUE), 3),
+    IQR = round(IQR(x, na.rm = TRUE), 3),
+    Skewness = round(skewness, 3),
+    Kurtosis = round(kurtosis, 3)
+  )
+  return(stats)
+}
 
-\subsubsection{Box Plots}
-% R code for box plots
-% Outlier detection and comparison between groups
+# Calculate for all continuous variables
+continuous_vars <- c("layer_height", "wall_thickness", "infill_density", 
+                    "nozzle_temperature", "bed_temperature", "print_speed", 
+                    "fan_speed", "roughness", "tension_strenght", "elongation")
+\end{lstlisting}
 
-\subsubsection{Scatter Plots}
-% R code for scatter plots
-% Relationship analysis between variables
+The descriptive statistics reveal important characteristics of the dataset variables:
+
+\begin{verbatim}
+               Variable Count    Mean Median     SD Variance    Min   Max
+        layer_height    50   0.106   0.10  0.064    0.004   0.02   0.2
+       wall_thickness    50   5.220   5.00  2.923    8.542   1.00  10.0
+       infill_density    50  53.400  50.00 25.363  643.306  10.00  90.0
+   nozzle_temperature    50 221.500 220.00 14.820  219.643 200.00 250.0
+      bed_temperature    50  70.000  70.00  7.143   51.020  60.00  80.0
+          print_speed    50  64.000  60.00 29.692  881.633  40.00 120.0
+            fan_speed    50  50.000  50.00 35.714 1275.510   0.00 100.0
+            roughness    50 170.580 165.50 99.034 9807.759  21.00 368.0
+     tension_strenght    50  20.080  19.00  8.926   79.667   4.00  37.0
+           elongation    50   1.672   1.55  0.788    0.621   0.40   3.3
+        Range     Q1      Q3     IQR Skewness Kurtosis
+         0.18   0.06   0.150   0.090    0.139   -1.327
+         9.00   3.00   7.000   4.000    0.170   -1.132
+        80.00  40.00  80.000  40.000   -0.076   -1.093
+        50.00 210.00 230.000  20.000    0.436   -0.696
+        20.00  65.00  75.000  10.000    0.000   -1.334
+        80.00  40.00  60.000  20.000    1.153   -0.243
+       100.00  25.00  75.000  50.000    0.000   -1.334
+       347.00  92.00 239.250 147.250    0.296   -0.941
+        33.00  12.00  27.000  15.000    0.079   -1.190
+         2.90   1.10   2.175   1.075    0.487   -0.698
+\end{verbatim}
+
+\textbf{Key Findings:}
+\begin{itemize}
+    \item \textbf{Layer Height}: Mean = 0.106 mm, ranging from 0.02 to 0.2 mm with relatively low variability (SD = 0.064)
+    \item \textbf{Nozzle Temperature}: Mean = 221.5\textdegree C, ranging from 200\textdegree C to 250\textdegree C with moderate variability (SD = 14.82)
+    \item \textbf{Roughness}: Mean = 170.6 \textmu m, showing high variability (SD = 99.03) with values ranging from 21 to 368 \textmu m
+    \item \textbf{Tension Strength}: Mean = 20.08 MPa, ranging from 4 to 37 MPa (SD = 8.93)
+    \item \textbf{Elongation}: Mean = 1.67\%, ranging from 0.4\% to 3.3\% (SD = 0.79)
+\end{itemize}
+
+\subsection{Distribution Analysis}
+
+Histograms were created to visualize the distribution patterns of both input parameters and output quality metrics.
+
+\subsubsection{Output Variables Distribution}
+
+\begin{lstlisting}[language=R, caption={Histogram Creation for Output Variables}, label={lst:output_histograms}]
+# Create histograms for output variables (quality metrics)
+output_vars <- c("roughness", "tension_strenght", "elongation")
+output_labels <- c("Roughness (\textmu m)", "Tension Strength (MPa)", "Elongation (%)")
+
+for (i in 1:length(output_vars)) {
+  var <- output_vars[i]
+  label <- output_labels[i]
+  
+  p <- ggplot(data_cleaned, aes_string(x = var)) +
+    geom_histogram(bins = 10, fill = "steelblue", color = "black", alpha = 0.7) +
+    geom_density(aes(y = ..density.. * nrow(data_cleaned) * diff(range(data_cleaned[[var]])) / 10), 
+                 color = "red", size = 1) +
+    labs(title = paste("Distribution of", label),
+         subtitle = paste("Mean =", round(mean(data_cleaned[[var]]), 2), 
+                         ", SD =", round(sd(data_cleaned[[var]]), 2)),
+         x = label, y = "Frequency") +
+    theme_minimal()
+  
+  filename <- paste0("/home/kari/prob-stat-pj/graphics/04-histogram_", var, ".png")
+  ggsave(filename, plot = p, width = 8, height = 6, dpi = 300)
+}
+\end{lstlisting}
+
+The distribution analysis reveals:
+\begin{itemize}
+    \item \textbf{Roughness}: Shows a relatively normal distribution with slight right skewness (skewness = 0.296)
+    \item \textbf{Tension Strength}: Exhibits a nearly symmetric distribution (skewness = 0.079)
+    \item \textbf{Elongation}: Displays moderate right skewness (skewness = 0.487)
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_roughness.png}
+\caption{Distribution of Surface Roughness}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_tension_strenght.png}
+\caption{Distribution of Tension Strength}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_elongation.png}
+\caption{Distribution of Elongation}
+\end{minipage}
+\end{figure}
+
+\subsubsection{Input Variables Distribution}
+
+\begin{lstlisting}[language=R, caption={Histogram Creation for Key Input Variables}, label={lst:input_histograms}]
+# Create histograms for key input variables
+input_vars <- c("layer_height", "nozzle_temperature", "print_speed", "infill_density")
+input_labels <- c("Layer Height (mm)", "Nozzle Temperature (\textdegree C)", "Print Speed (mm/s)", "Infill Density (%)")
+
+for (i in 1:length(input_vars)) {
+  var <- input_vars[i]
+  label <- input_labels[i]
+  
+  p <- ggplot(data_cleaned, aes_string(x = var)) +
+    geom_histogram(bins = 8, fill = "lightgreen", color = "black", alpha = 0.7) +
+    geom_density(aes(y = ..density.. * nrow(data_cleaned) * diff(range(data_cleaned[[var]])) / 8), 
+                 color = "darkgreen", size = 1) +
+    labs(title = paste("Distribution of", label),
+         subtitle = paste("Mean =", round(mean(data_cleaned[[var]]), 2), 
+                         ", SD =", round(sd(data_cleaned[[var]]), 2)),
+         x = label, y = "Frequency") +
+    theme_minimal()
+  
+  filename <- paste0("/home/kari/prob-stat-pj/graphics/04-histogram_", var, ".png")
+  ggsave(filename, plot = p, width = 8, height = 6, dpi = 300)
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_layer_height.png}
+\caption{Distribution of Layer Height}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_nozzle_temperature.png}
+\caption{Distribution of Nozzle Temperature}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_print_speed.png}
+\caption{Distribution of Print Speed}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-histogram_infill_density.png}
+\caption{Distribution of Infill Density}
+\end{minipage}
+\end{figure}
+
+\subsection{Group Comparison Analysis}
+
+Boxplots were created to compare the distribution of output variables across different categorical factors (infill pattern and material type).
+
+\subsubsection{Comparison by Infill Pattern}
+
+\begin{lstlisting}[language=R, caption={Boxplot Analysis by Infill Pattern}, label={lst:boxplot_infill}]
+# Boxplots for output variables by infill_pattern
+for (i in 1:length(output_vars)) {
+  var <- output_vars[i]
+  label <- output_labels[i]
+  
+  p <- ggplot(data_cleaned, aes_string(x = "infill_pattern", y = var, fill = "infill_pattern")) +
+    geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 2) +
+    geom_jitter(width = 0.2, alpha = 0.5, size = 1.5) +
+    scale_fill_manual(values = c("grid" = "lightblue", "honeycomb" = "lightcoral")) +
+    labs(title = paste(label, "by Infill Pattern"),
+         subtitle = "Comparison between Grid and Honeycomb patterns",
+         x = "Infill Pattern", y = label, fill = "Infill Pattern") +
+    theme_minimal()
+}
+\end{lstlisting}
+
+\textbf{Summary by Infill Pattern:}
+\begin{verbatim}
+  infill_pattern Count Roughness_Mean Roughness_SD Tension_Mean Tension_SD
+1 grid              25           177.        101.          20         9.39
+2 honeycomb         25           164.         98.2         20.2       8.62
+  Elongation_Mean Elongation_SD
+1            1.58          0.82
+2            1.76          0.76
+\end{verbatim}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_roughness_by_infill_pattern.png}
+\caption{Roughness by Infill Pattern}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_tension_strenght_by_infill_pattern.png}
+\caption{Tension Strength by Infill Pattern}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_elongation_by_infill_pattern.png}
+\caption{Elongation by Infill Pattern}
+\end{minipage}
+\end{figure}
+
+\subsubsection{Comparison by Material Type}
+
+\begin{lstlisting}[language=R, caption={Boxplot Analysis by Material Type}, label={lst:boxplot_material}]
+# Boxplots for output variables by material
+for (i in 1:length(output_vars)) {
+  var <- output_vars[i]
+  label <- output_labels[i]
+  
+  p <- ggplot(data_cleaned, aes_string(x = "material", y = var, fill = "material")) +
+    geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 2) +
+    geom_jitter(width = 0.2, alpha = 0.5, size = 1.5) +
+    scale_fill_manual(values = c("abs" = "gold", "pla" = "lightgreen")) +
+    labs(title = paste(label, "by Material Type"),
+         subtitle = "Comparison between ABS and PLA materials",
+         x = "Material Type", y = label, fill = "Material") +
+    theme_minimal()
+}
+\end{lstlisting}
+
+\textbf{Summary by Material Type:}
+\begin{verbatim}
+  material Count Roughness_Mean Roughness_SD Tension_Mean Tension_SD
+1 abs         25           193.        111.          17.5       9.18
+2 pla         25           148.         81.6         22.6       8.04
+  Elongation_Mean Elongation_SD
+1            1.46          0.78
+2            1.88          0.76
+\end{verbatim}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_roughness_by_material.png}
+\caption{Roughness by Material Type}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_tension_strenght_by_material.png}
+\caption{Tension Strength by Material Type}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-boxplot_elongation_by_material.png}
+\caption{Elongation by Material Type}
+\end{minipage}
+\end{figure}
+
+The group comparison reveals significant differences:
+\begin{itemize}
+    \item \textbf{Material Effect}: ABS shows higher roughness (193 \textmu m vs 148 \textmu m) but lower tension strength (17.5 MPa vs 22.6 MPa) compared to PLA
+    \item \textbf{Infill Pattern Effect}: Grid pattern shows slightly higher roughness (177 \textmu m vs 164 \textmu m) with similar tension strength values
+\end{itemize}
+
+\subsection{Relationship Analysis}
+
+Scatter plots were created to explore relationships between input parameters and output quality metrics.
+
+\begin{lstlisting}[language=R, caption={Scatter Plot Analysis}, label={lst:scatter_plots}]
+# Create scatter plots for each output vs key inputs
+key_inputs <- c("layer_height", "nozzle_temperature", "print_speed", "infill_density")
+key_input_labels <- c("Layer Height (mm)", "Nozzle Temperature (\textdegree C)", "Print Speed (mm/s)", "Infill Density (%)")
+
+for (i in 1:length(output_vars)) {
+  output_var <- output_vars[i]
+  output_label <- output_labels[i]
+  
+  for (j in 1:length(key_inputs)) {
+    input_var <- key_inputs[j]
+    input_label <- key_input_labels[j]
+    
+    p <- ggplot(data_cleaned, aes_string(x = input_var, y = output_var)) +
+      geom_point(aes(color = material, shape = infill_pattern), size = 3, alpha = 0.7) +
+      geom_smooth(method = "lm", se = TRUE, color = "blue", linetype = "dashed") +
+      scale_color_manual(values = c("abs" = "red", "pla" = "green")) +
+      scale_shape_manual(values = c("grid" = 16, "honeycomb" = 17)) +
+      labs(title = paste(output_label, "vs", input_label),
+           subtitle = paste("Correlation:", round(cor(data_cleaned[[input_var]], data_cleaned[[output_var]]), 3)),
+           x = input_label, y = output_label,
+           color = "Material", shape = "Infill Pattern") +
+      theme_minimal()
+  }
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_roughness_vs_layer_height.png}
+\caption{Roughness vs Layer Height}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_roughness_vs_nozzle_temperature.png}
+\caption{Roughness vs Nozzle Temperature}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_roughness_vs_print_speed.png}
+\caption{Roughness vs Print Speed}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_roughness_vs_infill_density.png}
+\caption{Roughness vs Infill Density}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_tension_strenght_vs_layer_height.png}
+\caption{Tension Strength vs Layer Height}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_tension_strenght_vs_nozzle_temperature.png}
+\caption{Tension Strength vs Nozzle Temperature}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_tension_strenght_vs_print_speed.png}
+\caption{Tension Strength vs Print Speed}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_tension_strenght_vs_infill_density.png}
+\caption{Tension Strength vs Infill Density}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_elongation_vs_layer_height.png}
+\caption{Elongation vs Layer Height}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_elongation_vs_nozzle_temperature.png}
+\caption{Elongation vs Nozzle Temperature}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_elongation_vs_print_speed.png}
+\caption{Elongation vs Print Speed}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{graphics/04-scatter_elongation_vs_infill_density.png}
+\caption{Elongation vs Infill Density}
+\end{minipage}
+\end{figure}
 
 \subsection{Correlation Analysis}
-% R code for correlation matrix
-% Correlation heatmap
-% Interpretation of correlations
 
-\subsection{Group Comparisons}
-% Analysis by infill pattern and material type
-% Summary statistics by groups
+A comprehensive correlation analysis was performed to understand the linear relationships between all continuous variables.
+
+\begin{lstlisting}[language=R, caption={Correlation Matrix Calculation and Visualization}, label={lst:correlation_matrix}]
+# Calculate correlation matrix for continuous variables
+corr_data <- data_cleaned[continuous_vars]
+corr_matrix <- cor(corr_data)
+
+# Create correlation heatmap
+corrplot(corr_matrix, method = "color", type = "upper", order = "hclust",
+         tl.cex = 0.8, tl.col = "black", tl.srt = 45,
+         addCoef.col = "black", number.cex = 0.7,
+         title = "Correlation Matrix of 3D Printing Parameters")
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{graphics/04-correlation_matrix.png}
+\caption{Correlation Matrix Heatmap of 3D Printing Parameters}
+\label{fig:correlation_matrix}
+\end{figure}
+
+The complete correlation matrix from the analysis:
+
+\begin{verbatim}
+                   layer_height wall_thickness infill_density
+layer_height              1.000         -0.193          0.003
+wall_thickness           -0.193          1.000          0.103
+infill_density            0.003          0.103          1.000
+nozzle_temperature        0.000         -0.118          0.239
+bed_temperature           0.000         -0.029          0.000
+print_speed              -0.056         -0.420         -0.094
+fan_speed                 0.000         -0.029          0.000
+roughness                 0.801         -0.227          0.118
+tension_strenght          0.338          0.400          0.358
+elongation                0.508          0.176          0.159
+
+                   nozzle_temperature bed_temperature print_speed fan_speed
+layer_height                    0.000           0.000      -0.056     0.000
+wall_thickness                 -0.118          -0.029      -0.420    -0.029
+infill_density                  0.239           0.000      -0.094     0.000
+nozzle_temperature              1.000           0.602       0.000     0.602
+bed_temperature                 0.602           1.000       0.000     1.000
+print_speed                     0.000           0.000       1.000     0.000
+fan_speed                       0.602           1.000       0.000     1.000
+roughness                       0.349           0.192       0.121     0.192
+tension_strenght               -0.406          -0.253      -0.265    -0.253
+elongation                     -0.527          -0.301      -0.234    -0.301
+
+                   roughness tension_strenght elongation
+layer_height           0.801            0.338      0.508
+wall_thickness        -0.227            0.400      0.176
+infill_density         0.118            0.358      0.159
+nozzle_temperature     0.349           -0.406     -0.527
+bed_temperature        0.192           -0.253     -0.301
+print_speed            0.121           -0.265     -0.234
+fan_speed              0.192           -0.253     -0.301
+roughness              1.000            0.052      0.099
+tension_strenght       0.052            1.000      0.838
+elongation             0.099            0.838      1.000
+\end{verbatim}
+
+\textbf{Key Correlation Findings:}
+\begin{itemize}
+    \item \textbf{Strong Positive Correlations}:
+    \begin{itemize}
+        \item Layer height and roughness (r = 0.801) - higher layers increase surface roughness
+        \item Tension strength and elongation (r = 0.838) - materials with higher strength tend to have better elongation
+        \item Bed temperature and fan speed (r = 1.000) - perfect correlation indicating experimental design
+    \end{itemize}
+    \item \textbf{Moderate Negative Correlations}:
+    \begin{itemize}
+        \item Nozzle temperature and elongation (r = -0.527) - higher temperatures reduce elongation
+        \item Print speed and wall thickness (r = -0.420) - faster printing requires thinner walls
+    \end{itemize}
+    \item \textbf{Notable Relationships}:
+    \begin{itemize}
+        \item Layer height shows strong correlation with roughness but moderate correlation with other quality metrics
+        \item Temperature-related parameters (nozzle, bed) show consistent negative correlations with mechanical properties
+    \end{itemize}
+\end{itemize}
+
+\subsection{Summary of Descriptive Analysis}
+
+The descriptive statistical analysis has revealed several important insights:
+
+\begin{enumerate}
+    \item \textbf{Data Quality}: All variables show reasonable distributions with no extreme outliers that would compromise analysis
+    \item \textbf{Material Differences}: ABS and PLA materials exhibit distinct characteristics, with ABS showing higher roughness but lower mechanical strength
+    \item \textbf{Parameter Relationships}: Strong correlations exist between layer height and surface quality, and between mechanical properties
+    \item \textbf{Design Factors}: Infill pattern shows minimal impact on quality metrics, while material choice significantly affects outcomes
+\end{enumerate}
+
+These findings provide a solid foundation for the subsequent multiple linear regression analysis, where we will quantify these relationships and develop predictive models for quality assessment.
+
+\textbf{Graphics Summary:}
+A total of 26 graphics files were generated during this analysis:
+\begin{itemize}
+    \item 7 Histograms (3 output + 4 input variables)
+    \item 6 Boxplots (3 output variables × 2 grouping factors)
+    \item 12 Scatter plots (3 output × 4 input variables)
+    \item 1 Correlation matrix heatmap
+\end{itemize}
+
+All graphics are saved in the \texttt{graphics/} directory with the prefix \texttt{04-} for easy identification and reference.
