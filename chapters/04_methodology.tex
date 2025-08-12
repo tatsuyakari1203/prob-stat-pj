@@ -5,27 +5,128 @@
 \section{Methodology}
 
 \subsection{Research Objectives}
-% Clear statement of research questions
-% What we want to achieve with statistical analysis
+
+This study aims to analyze the impact of 3D printing parameters on product quality metrics using statistical modeling techniques. The primary research objectives are:
+
+\begin{itemize}
+    \item To identify significant predictors affecting surface roughness, tensile strength, and elongation of 3D printed products
+    \item To quantify the relationship between printing parameters and quality outcomes
+    \item To develop predictive models for quality assessment based on printing settings
+    \item To provide insights for optimizing 3D printing processes
+\end{itemize}
 
 \subsection{Statistical Methods}
 
 \subsubsection{Multiple Linear Regression}
-% Theoretical background of multiple linear regression
-% Mathematical formulation
-% Assumptions of linear regression
+
+Multiple Linear Regression (MLR) is a statistical technique used to model the relationship between a dependent variable and multiple independent variables. The general form of a multiple linear regression model is:
+
+\begin{equation}
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p + \epsilon
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $Y$ is the dependent variable (response variable)
+    \item $X_1, X_2, \ldots, X_p$ are the independent variables (predictor variables)
+    \item $\beta_0$ is the intercept term
+    \item $\beta_1, \beta_2, \ldots, \beta_p$ are the regression coefficients
+    \item $\epsilon$ is the error term
+\end{itemize}
+
+The regression coefficients are estimated using the Ordinary Least Squares (OLS) method, which minimizes the sum of squared residuals:
+
+\begin{equation}
+\text{SSE} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+\end{equation}
+
+where $y_i$ are the observed values and $\hat{y}_i$ are the predicted values.
+
+\paragraph{Assumptions of Multiple Linear Regression}
+
+For valid inference, multiple linear regression requires several key assumptions:
+
+\begin{enumerate}
+    \item \textbf{Linearity}: The relationship between the dependent and independent variables is linear
+    \item \textbf{Independence}: Observations are independent of each other
+    \item \textbf{Homoscedasticity}: Constant variance of residuals across all levels of the independent variables
+    \item \textbf{Normality}: Residuals are normally distributed
+    \item \textbf{No Multicollinearity}: Independent variables are not highly correlated with each other
+\end{enumerate}
 
 \subsubsection{Model Selection}
-% Criteria for variable selection
-% Forward/backward selection methods
-% Model comparison techniques
+
+Model selection involves choosing the most appropriate subset of predictor variables to include in the final model. Several criteria are used for model comparison and selection:
+
+\paragraph{Information Criteria}
+
+\textbf{Akaike Information Criterion (AIC)} penalizes model complexity while rewarding goodness of fit:
+
+\begin{equation}
+\text{AIC} = n \ln\left(\frac{\text{SSE}}{n}\right) + 2k
+\end{equation}
+
+where $n$ is the sample size, SSE is the sum of squared errors, and $k$ is the number of parameters.
+
+\textbf{Bayesian Information Criterion (BIC)} applies a stronger penalty for model complexity:
+
+\begin{equation}
+\text{BIC} = n \ln\left(\frac{\text{SSE}}{n}\right) + k \ln(n)
+\end{equation}
+
+Lower AIC and BIC values indicate better models, with BIC being more conservative in model selection.
+
+\paragraph{Goodness of Fit Measures}
+
+\textbf{R-squared ($R^2$)} measures the proportion of variance in the dependent variable explained by the model:
+
+\begin{equation}
+R^2 = 1 - \frac{\text{SSE}}{\text{SST}}
+\end{equation}
+
+where SST is the total sum of squares.
+
+\textbf{Adjusted R-squared} accounts for the number of predictors in the model:
+
+\begin{equation}
+\text{Adj } R^2 = 1 - \frac{(1-R^2)(n-1)}{n-p-1}
+\end{equation}
+
+where $p$ is the number of predictors.
 
 \subsubsection{Model Diagnostics}
-% Residual analysis
-% Assumption checking
-% Goodness of fit measures
+
+\paragraph{Multicollinearity Detection}
+
+Variance Inflation Factor (VIF) is used to detect multicollinearity among predictor variables:
+
+\begin{equation}
+\text{VIF}_j = \frac{1}{1-R_j^2}
+\end{equation}
+
+where $R_j^2$ is the R-squared from regressing the $j$-th predictor on all other predictors. VIF values above 10 indicate problematic multicollinearity.
+
+\paragraph{Residual Analysis}
+
+Diagnostic plots are used to assess model assumptions:
+\begin{itemize}
+    \item Residuals vs. Fitted values plot to check for homoscedasticity and linearity
+    \item Normal Q-Q plot to assess normality of residuals
+    \item Scale-Location plot to check for constant variance
+    \item Residuals vs. Leverage plot to identify influential observations
+\end{itemize}
 
 \subsection{Implementation Approach}
-% Step-by-step methodology
-% R programming approach
-% Validation strategy
+
+The analysis follows a systematic approach:
+
+\begin{enumerate}
+    \item \textbf{Data Preparation}: Load cleaned dataset and ensure proper variable types
+    \item \textbf{Model Building}: Construct full models for each response variable (roughness, tensile strength, elongation)
+    \item \textbf{Variable Selection}: Use statistical significance (p-values) and model comparison techniques to identify optimal predictors
+    \item \textbf{Model Validation}: Perform diagnostic checks to verify model assumptions
+    \item \textbf{Model Comparison}: Evaluate models using AIC, BIC, R-squared, and adjusted R-squared
+    \item \textbf{Interpretation}: Analyze coefficient estimates and their practical significance
+\end{enumerate}
+
+All analyses are conducted using R statistical software, utilizing packages such as \texttt{car} for VIF calculations, \texttt{ggplot2} for visualization, and base R functions for model fitting and diagnostics.

@@ -4,22 +4,76 @@
 
 \section{Conclusion}
 
-\subsection{Summary of Findings}
-% Key results from the analysis
-% Most important factors affecting 3D print quality
-% Statistical significance of findings
+Nghiên cứu này đã thành công trong việc phân tích mối quan hệ giữa các tham số in 3D và chất lượng sản phẩm sử dụng hồi quy tuyến tính bội. Kết quả cung cấp những hiểu biết có giá trị để tối ưu hóa quy trình in 3D nhằm đạt được chất lượng mong muốn.
 
-\subsection{Practical Implications}
-% How results can be applied in practice
-% Recommendations for 3D printing parameter optimization
-% Guidelines for achieving better print quality
+\subsection{Phát hiện chính}
 
-\subsection{Limitations}
-% Study limitations and constraints
-% Data limitations
-% Model limitations
+\paragraph{Hiệu suất mô hình}
+Ba mô hình hồi quy tuyến tính bội đã được xây dựng thành công với hiệu suất khác nhau:
+\begin{itemize}
+    \item \textbf{Mô hình độ nhám}: R² = 87.17\%, giải thích tốt nhất phương sai của dữ liệu
+    \item \textbf{Mô hình độ giãn dài}: R² = 70.53\%, hiệu suất trung bình khá
+    \item \textbf{Mô hình độ bền kéo}: R² = 66.67\%, hiệu suất chấp nhận được
+\end{itemize}
 
-\subsection{Future Research}
-% Suggestions for future studies
-% Additional variables to consider
-% Advanced modeling techniques
+\paragraph{Tham số quan trọng nhất}
+\textbf{Chiều cao lớp (layer height)} xuất hiện như yếu tố dự báo quan trọng nhất trong cả ba mô hình:
+\begin{itemize}
+    \item Tương quan mạnh với độ nhám (r = 0.801)
+    \item Ảnh hưởng đáng kể đến độ bền kéo (r = 0.338) và độ giãn dài (r = 0.508)
+    \item Là tham số cần ưu tiên tối ưu hóa đầu tiên
+\end{itemize}
+
+\paragraph{Tác động của vật liệu}
+Loại vật liệu có ảnh hưởng đáng kể đến tất cả chỉ số chất lượng:
+\begin{itemize}
+    \item \textbf{PLA}: Độ nhám thấp hơn (148 vs 193), độ bền kéo cao hơn (22.6 vs 17.5)
+    \item \textbf{ABS}: Độ nhám cao hơn nhưng có đặc tính cơ học khác biệt
+    \item Lựa chọn vật liệu cần phù hợp với mục tiêu chất lượng cụ thể
+\end{itemize}
+
+\paragraph{Kiểm soát nhiệt độ}
+Nhiệt độ đầu phun và bàn in đều có tác động quan trọng:
+\begin{itemize}
+    \item Tương quan nghịch với độ bền kéo và độ giãn dài
+    \item Ảnh hưởng tích cực đến chất lượng bề mặt
+    \item Cần kiểm soát chính xác để đạt kết quả nhất quán
+\end{itemize}
+
+\subsection{Ý nghĩa thực tiễn}
+
+\paragraph{Chiến lược tối ưu hóa}
+\begin{enumerate}
+    \item \textbf{Ưu tiên hàng đầu}: Tối ưu chiều cao lớp cho cải thiện chất lượng tổng thể
+    \item \textbf{Lựa chọn vật liệu}: Chọn PLA cho độ bền kéo cao, ABS cho ứng dụng đặc biệt
+    \item \textbf{Kiểm soát nhiệt độ}: Thiết lập nhiệt độ chính xác theo từng loại vật liệu
+    \item \textbf{Tối ưu theo mục tiêu}: Điều chỉnh tham số khác nhau cho từng chỉ số chất lượng
+\end{enumerate}
+
+\paragraph{Độ tin cậy dự đoán}
+\begin{itemize}
+    \item \textbf{Cao}: Dự đoán độ nhám (RMSE = 35.12)
+    \item \textbf{Trung bình}: Dự đoán độ giãn dài (RMSE = 0.42)
+    \item \textbf{Chấp nhận được}: Dự đoán độ bền kéo (RMSE = 5.10)
+\end{itemize}
+
+\subsection{Hạn chế và hướng nghiên cứu tương lai}
+
+\paragraph{Hạn chế của nghiên cứu}
+\begin{itemize}
+    \item Kích thước mẫu hạn chế (50 quan sát) có thể ảnh hưởng đến khả năng tổng quát hóa
+    \item Chỉ khảo sát 2 loại vật liệu (PLA, ABS)
+    \item Chưa xem xét các yếu tố môi trường (độ ẩm, nhiệt độ phòng)
+    \item Mô hình độ bền kéo có R² tương đối thấp (66.67\%)
+\end{itemize}
+
+\paragraph{Hướng phát triển}
+\begin{itemize}
+    \item Mở rộng nghiên cứu với nhiều loại vật liệu khác
+    \item Tích hợp các yếu tố môi trường và hậu xử lý
+    \item Phát triển mô hình dự đoán nâng cao cho độ bền kéo
+    \item Nghiên cứu tương tác phức tạp giữa các tham số
+\end{itemize}
+
+\paragraph{Kết luận cuối cùng}
+Nghiên cứu đã chứng minh hiệu quả của hồi quy tuyến tính bội trong việc dự đoán chất lượng sản phẩm in 3D. Với chiều cao lớp là yếu tố quan trọng nhất và sự khác biệt rõ rệt giữa các loại vật liệu, kết quả cung cấp nền tảng khoa học cho việc tối ưu hóa quy trình in 3D trong thực tiễn.

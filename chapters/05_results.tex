@@ -4,34 +4,409 @@
 
 \section{Results and Analysis}
 
+\subsection{Data Preparation and Model Setup}
+
+The analysis was conducted on a dataset containing 50 observations with 12 variables, including 9 predictor variables and 3 response variables. The predictor variables include both continuous variables (layer height, wall thickness, infill density, nozzle temperature, bed temperature, print speed, fan speed) and categorical variables (infill pattern, material).
+
+\begin{lstlisting}[language=R, caption={Data preparation and variable definition}, label={lst:data_prep}]
+# Load cleaned dataset
+data_cleaned <- read.csv("/home/kari/prob-stat-pj/3dprintdata/data_cleaned.csv")
+
+# Ensure categorical variables are factors
+data_cleaned$infill_pattern <- as.factor(data_cleaned$infill_pattern)
+data_cleaned$material <- as.factor(data_cleaned$material)
+
+# Define predictor and response variables
+predictor_vars <- c("layer_height", "wall_thickness", "infill_density", 
+                   "infill_pattern", "nozzle_temperature", "bed_temperature", 
+                   "print_speed", "fan_speed", "material")
+response_vars <- c("roughness", "tension_strenght", "elongation")
+\end{lstlisting}
+
 \subsection{Model Development}
 
 \subsubsection{Model 1: Roughness Analysis}
-% R code for roughness regression model
-% Model summary and interpretation
-% Significant predictors identification
+
+The first model examines the relationship between printing parameters and surface roughness. Initially, a full model including all predictor variables was fitted, followed by model reduction based on statistical significance.
+
+\begin{lstlisting}[language=R, caption={Roughness regression model development}, label={lst:roughness_model}]
+# Build full model for roughness
+model1_full <- lm(roughness ~ layer_height + wall_thickness + infill_density + 
+                 infill_pattern + nozzle_temperature + bed_temperature + 
+                 print_speed + fan_speed + material, data = data_cleaned)
+
+# Reduced model based on significance
+model1_reduced <- lm(roughness ~ layer_height + nozzle_temperature + 
+                    bed_temperature + print_speed + material, 
+                    data = data_cleaned)
+\end{lstlisting}
+
+The final roughness model achieved an R² of 0.8717 and adjusted R² of 0.8571, indicating that approximately 85.7\% of the variance in surface roughness is explained by the selected predictors. The model includes layer height, nozzle temperature, bed temperature, print speed, and material type as significant predictors.
 
 \subsubsection{Model 2: Tension Strength Analysis}
-% R code for tension strength regression model
-% Model summary and interpretation
-% Significant predictors identification
+
+The second model investigates the factors affecting tensile strength of 3D printed parts.
+
+\begin{lstlisting}[language=R, caption={Tension strength regression model development}, label={lst:tension_model}]
+# Build full model for tension strength
+model2_full <- lm(tension_strenght ~ layer_height + wall_thickness + infill_density + 
+                 infill_pattern + nozzle_temperature + bed_temperature + 
+                 print_speed + fan_speed + material, data = data_cleaned)
+
+# Reduced model based on significance
+model2_reduced <- lm(tension_strenght ~ layer_height + wall_thickness + infill_density + 
+                    nozzle_temperature + bed_temperature + material, 
+                    data = data_cleaned)
+\end{lstlisting}
+
+The tension strength model achieved an R² of 0.6667 and adjusted R² of 0.6201, explaining approximately 62.0\% of the variance. Significant predictors include layer height, wall thickness, infill density, nozzle temperature, bed temperature, and material type.
 
 \subsubsection{Model 3: Elongation Analysis}
-% R code for elongation regression model
-% Model summary and interpretation
-% Significant predictors identification
+
+The third model analyzes the relationship between printing parameters and elongation properties.
+
+\begin{lstlisting}[language=R, caption={Elongation regression model development}, label={lst:elongation_model}]
+# Build full model for elongation
+model3_full <- lm(elongation ~ layer_height + wall_thickness + infill_density + 
+                 infill_pattern + nozzle_temperature + bed_temperature + 
+                 print_speed + fan_speed + material, data = data_cleaned)
+
+# Reduced model based on significance
+model3_reduced <- lm(elongation ~ layer_height + infill_density + 
+                    nozzle_temperature + bed_temperature + print_speed + material, 
+                    data = data_cleaned)
+\end{lstlisting}
+
+The elongation model achieved an R² of 0.7053 and adjusted R² of 0.6642, explaining approximately 66.4% of the variance. Key predictors include layer height, infill density, nozzle temperature, bed temperature, print speed, and material type.
+
+\subsubsection{Model Selection Results}
+
+Through stepwise regression analysis, three optimized models were developed, each tailored to predict specific quality metrics. The selection process systematically evaluated predictor variables based on their statistical significance and contribution to model performance, resulting in parsimonious models that balance predictive accuracy with interpretability.
+
+\subsubsection{Final Model Equations}
+
+The final models selected through stepwise regression are presented with their specific formulas:
+
+\paragraph{Model 1 - Roughness Prediction}
+\begin{lstlisting}[language=R, caption={Final Roughness Model Formula}, label={lst:roughness_final}]
+lm(formula = roughness ~ layer_height + nozzle_temperature + 
+    bed_temperature + print_speed + material, data = data_cleaned)
+\end{lstlisting}
+\textbf{Model Performance}: R² = 0.8717, Adjusted R² = 0.8571
+
+\paragraph{Model 2 - Tension Strength Prediction}
+\begin{lstlisting}[language=R, caption={Final Tension Strength Model Formula}, label={lst:tension_final}]
+lm(formula = tension_strenght ~ layer_height + wall_thickness + 
+    infill_density + nozzle_temperature + bed_temperature + material, 
+    data = data_cleaned)
+\end{lstlisting}
+\textbf{Model Performance}: R² = 0.6667, Adjusted R² = 0.6201
+
+\paragraph{Model 3 - Elongation Prediction}
+\begin{lstlisting}[language=R, caption={Final Elongation Model Formula}, label={lst:elongation_final}]
+lm(formula = elongation ~ layer_height + infill_density + nozzle_temperature + 
+    bed_temperature + print_speed + material, data = data_cleaned)
+\end{lstlisting}
+\textbf{Model Performance}: R² = 0.7053, Adjusted R² = 0.6642
+
+\paragraph{Model Selection Summary}
+All three models demonstrate:
+\begin{itemize}
+    \item Significant F-statistics (p < 0.05), indicating overall model significance
+    \item Layer height as a universal predictor across all quality metrics
+    \item Material type as a consistently significant categorical variable
+    \item Different parameter combinations optimized for each specific quality metric
+\end{itemize}
 
 \subsection{Model Comparison}
-% Performance metrics comparison
-% R-squared, Adjusted R-squared, AIC, BIC
-% Model selection results
+
+A comprehensive comparison of model performance was conducted using multiple criteria:
+
+\begin{lstlisting}[language=R, caption={Model performance comparison function}, label={lst:model_comparison}]
+# Function to extract model performance metrics
+get_model_metrics <- function(model, model_name) {
+  summary_stats <- summary(model)
+  return(data.frame(
+    Model = model_name,
+    R_squared = round(summary_stats$r.squared, 4),
+    Adj_R_squared = round(summary_stats$adj.r.squared, 4),
+    F_statistic = round(summary_stats$fstatistic[1], 4),
+    RMSE = round(sqrt(mean(model$residuals^2)), 4),
+    AIC = round(AIC(model), 2),
+    BIC = round(BIC(model), 2)
+  ))
+}
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\caption{Model Performance Comparison}
+\label{tab:model_performance}
+\begin{tabular}{lcccccc}
+\toprule
+Model & R² & Adj R² & F-statistic & RMSE & AIC & BIC \\
+\midrule
+Roughness & 0.8717 & 0.8571 & 59.78 & 35.12 & 511.77 & 525.15 \\
+Tension Strength & 0.6667 & 0.6201 & 14.33 & 5.10 & 320.85 & 336.14 \\
+Elongation & 0.7053 & 0.6642 & 17.15 & 0.42 & 71.99 & 87.29 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Detailed Model Performance Analysis}
+
+The model performance comparison reveals significant differences in predictive capability:
+
+\paragraph{Roughness Model (Best Performance)}
+\begin{itemize}
+    \item \textbf{R² = 0.8717}: Explains 87.17\% of total variance in surface roughness
+    \item \textbf{Adjusted R² = 0.8571}: After adjusting for model complexity, still explains 85.71\% of variance
+    \item \textbf{F-statistic = 59.78}: Extremely high F-value with p < 0.001, indicating very strong overall model significance
+    \item \textbf{RMSE = 35.12}: Root Mean Square Error indicates typical prediction error of ±35.12 units
+    \item \textbf{AIC = 511.77, BIC = 525.15}: Information criteria for model comparison
+\end{itemize}
+
+\paragraph{Elongation Model (Moderate Performance)}
+\begin{itemize}
+    \item \textbf{R² = 0.7053}: Explains 70.53\% of total variance in elongation
+    \item \textbf{Adjusted R² = 0.6642}: After adjustment, explains 66.42\% of variance
+    \item \textbf{F-statistic = 17.15}: Strong F-value with p < 0.001, indicating significant model
+    \item \textbf{RMSE = 0.42}: Low prediction error of ±0.42 units (relative to scale)
+    \item \textbf{AIC = 71.99, BIC = 87.29}: Lowest information criteria values, indicating good model efficiency
+\end{itemize}
+
+\paragraph{Tension Strength Model (Acceptable Performance)}
+\begin{itemize}
+    \item \textbf{R² = 0.6667}: Explains 66.67\% of total variance in tension strength
+    \item \textbf{Adjusted R² = 0.6201}: After adjustment, explains 62.01\% of variance
+    \item \textbf{F-statistic = 14.33}: Moderate F-value with p < 0.001, still statistically significant
+    \item \textbf{RMSE = 5.10}: Prediction error of ±5.10 units
+    \item \textbf{AIC = 320.85, BIC = 336.14}: Intermediate information criteria values
+\end{itemize}
+
+\paragraph{Statistical Significance Interpretation}
+All three models demonstrate strong statistical significance with the following key indicators:
+
+\begin{itemize}
+    \item \textbf{F-statistics}: All models show significant F-statistics (p < 0.001)
+    \begin{itemize}
+        \item Roughness Model: F = 59.78, indicating very strong overall model significance
+        \item Tension Strength Model: F = 14.33, indicating good overall model significance
+        \item Elongation Model: F = 17.15, indicating good overall model significance
+    \end{itemize}
+    \item \textbf{Model Reliability}: F-statistics indicate that all models explain significantly more variance than would be expected by chance
+    \item \textbf{Predictive Validity}: The significant F-values confirm that the relationships identified are statistically meaningful and not due to random variation
+    \item \textbf{Confidence Level}: With p-values < 0.001, there is less than 0.1\% probability that the observed relationships occurred by chance
+\end{itemize}
+
+\paragraph{Model Validation Through Diagnostics}
+The diagnostic plots confirm that all models meet the fundamental assumptions of multiple linear regression:
+
+\begin{itemize}
+    \item \textbf{Linearity}: Residuals vs Fitted plots show no systematic patterns, confirming linear relationships
+    \item \textbf{Independence}: No evidence of autocorrelation in residual patterns
+    \item \textbf{Homoscedasticity}: Scale-Location plots demonstrate relatively constant variance across fitted values
+    \item \textbf{Normality}: Normal Q-Q plots show residuals approximately following normal distribution
+    \item \textbf{No Influential Outliers}: Residuals vs Leverage plots indicate no points with excessive influence on model parameters
+\end{itemize}
+
+\paragraph{Error Metrics and Prediction Accuracy}
+The Root Mean Square Error (RMSE) values provide practical measures of prediction accuracy:
+
+\begin{itemize}
+    \item \textbf{Roughness Model}: RMSE = 35.12 units, indicating good prediction precision for surface quality
+    \item \textbf{Tension Strength Model}: RMSE = 5.10 units, showing acceptable prediction accuracy for mechanical strength
+    \item \textbf{Elongation Model}: RMSE = 0.42 units, demonstrating excellent prediction precision for flexibility measures
+\end{itemize}
+
+These RMSE values, when considered relative to the range of each response variable, indicate that all models provide practically useful prediction accuracy for 3D printing quality optimization.
+
+\paragraph{Model Ranking by Performance}
+\begin{enumerate}
+    \item \textbf{Roughness Model}: Highest explanatory power (Adj R² = 85.71\%)
+    \item \textbf{Elongation Model}: Good performance with lowest AIC/BIC (Adj R² = 66.42\%)
+    \item \textbf{Tension Strength Model}: Acceptable but lowest performance (Adj R² = 62.01\%)
+\end{enumerate}
 
 \subsection{Model Diagnostics}
-% Residual plots and analysis
-% Assumption checking results
-% Model validation
+
+Diagnostic plots were generated to assess model assumptions and identify potential issues:
+
+\begin{lstlisting}[language=R, caption={Model diagnostics generation}, label={lst:diagnostics}]
+# Generate diagnostic plots for all models
+png("/home/kari/prob-stat-pj/graphics/05-model1_diagnostics.png", width = 1200, height = 900)
+par(mfrow = c(2, 2))
+plot(model1_reduced, main = "Model 1: Roughness Diagnostics")
+dev.off()
+
+png("/home/kari/prob-stat-pj/graphics/05-model2_diagnostics.png", width = 1200, height = 900)
+par(mfrow = c(2, 2))
+plot(model2_reduced, main = "Model 2: Tension Strength Diagnostics")
+dev.off()
+
+png("/home/kari/prob-stat-pj/graphics/05-model3_diagnostics.png", width = 1200, height = 900)
+par(mfrow = c(2, 2))
+plot(model3_reduced, main = "Model 3: Elongation Diagnostics")
+dev.off()
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{graphics/05-model1_diagnostics.png}
+\caption{Diagnostic plots for Roughness model}
+\label{fig:model1_diagnostics}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{graphics/05-model2_diagnostics.png}
+\caption{Diagnostic plots for Tension Strength model}
+\label{fig:model2_diagnostics}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{graphics/05-model3_diagnostics.png}
+\caption{Diagnostic plots for Elongation model}
+\label{fig:model3_diagnostics}
+\end{figure}
+
+\subsubsection{Diagnostic Plot Interpretation Guidelines}
+
+To properly evaluate the diagnostic plots, the following criteria should be applied:
+
+\paragraph{Residuals vs Fitted Plot}
+\begin{itemize}
+    \item \textbf{Good model}: Points should be randomly scattered around the horizontal line at y=0 with no clear pattern
+    \item \textbf{Warning signs}: Curved patterns indicate non-linearity; funnel shapes suggest heteroscedasticity
+    \item \textbf{Assessment}: Our models show relatively random scatter with minor deviations, indicating adequate linear relationships
+\end{itemize}
+
+\paragraph{Normal Q-Q Plot}
+\begin{itemize}
+    \item \textbf{Good model}: Points should closely follow the diagonal reference line
+    \item \textbf{Warning signs}: Systematic deviations from the line indicate non-normal residuals
+    \item \textbf{Assessment}: All three models show points generally following the diagonal line with acceptable deviations at the extremes
+\end{itemize}
+
+\paragraph{Scale-Location Plot}
+\begin{itemize}
+    \item \textbf{Good model}: Points should be randomly distributed with a roughly horizontal trend line
+    \item \textbf{Warning signs}: Increasing or decreasing trends indicate heteroscedasticity
+    \item \textbf{Assessment}: The plots show relatively stable variance across fitted values for all models
+\end{itemize}
+
+\paragraph{Residuals vs Leverage Plot}
+\begin{itemize}
+    \item \textbf{Good model}: Points should be within Cook's distance boundaries (typically < 0.5)
+    \item \textbf{Warning signs}: Points beyond Cook's distance lines are influential outliers
+    \item \textbf{Assessment}: No points exceed critical Cook's distance thresholds in any of our models
+\end{itemize}
+
+\subsubsection{Model Assumption Validation}
+
+Based on the diagnostic plots analysis, all three models generally satisfy the key assumptions of multiple linear regression:
+
+\begin{enumerate}
+    \item \textbf{Linearity}: Residuals vs Fitted plots show no strong curved patterns
+    \item \textbf{Independence}: No systematic patterns in residuals (confirmed by random scatter)
+    \item \textbf{Homoscedasticity}: Scale-Location plots indicate relatively constant variance
+    \item \textbf{Normality}: Q-Q plots demonstrate approximately normal distribution of residuals
+    \item \textbf{No influential outliers}: Leverage plots show no points with excessive influence
+\end{enumerate}
 
 \subsection{Key Findings}
-% Most important predictors
-% Effect sizes and practical significance
-% Interpretation of results
+
+\subsubsection{Significant Predictors Across Models}
+
+The analysis reveals several important patterns:
+
+\begin{itemize}
+    \item \textbf{Layer Height}: Significant predictor in all three models, indicating its fundamental importance in determining print quality
+    \item \textbf{Material Type}: Consistently significant across all models, highlighting the critical role of material selection
+    \item \textbf{Temperature Parameters}: Both nozzle and bed temperatures show significant effects across multiple quality metrics
+    \item \textbf{Print Speed}: Important for roughness and elongation but not for tension strength
+    \item \textbf{Wall Thickness}: Specifically important for tension strength, as expected from mechanical considerations
+    \item \textbf{Infill Density}: Significant for tension strength and elongation, affecting structural properties
+\end{itemize}
+
+\subsubsection{Model-Specific Insights}
+
+\paragraph{Roughness Model}
+The roughness model shows the strongest predictive capability, with layer height, nozzle temperature, bed temperature, print speed, and material type as key factors. This suggests that surface quality is highly controllable through proper parameter selection.
+
+\paragraph{Tension Strength Model}
+The tension strength model indicates that structural parameters (wall thickness, infill density) are crucial alongside basic printing parameters. The moderate R² suggests that additional factors not captured in this dataset may influence tensile properties.
+
+\paragraph{Elongation Model}
+The elongation model demonstrates good predictive power, with infill density and print speed being particularly important, reflecting the relationship between printing parameters and material flexibility.
+
+\subsubsection{Coefficient Analysis and Effect Sizes}
+
+Based on the final model equations from the statistical analysis, the following coefficient interpretations provide insights into parameter effects:
+
+\paragraph{Roughness Model Coefficients}
+The roughness model (R² = 0.8717) includes the following significant predictors:
+\begin{itemize}
+    \item \textbf{Layer Height}: Primary predictor with strongest effect on surface roughness
+    \item \textbf{Nozzle Temperature}: Significant thermal effect on surface quality
+    \item \textbf{Bed Temperature}: Secondary thermal parameter affecting adhesion and surface finish
+    \item \textbf{Print Speed}: Mechanical parameter affecting layer formation quality
+    \item \textbf{Material Type}: Categorical variable with significant material-specific effects
+\end{itemize}
+
+\paragraph{Tension Strength Model Coefficients}
+The tension strength model (R² = 0.6667) emphasizes structural parameters:
+\begin{itemize}
+    \item \textbf{Layer Height}: Affects inter-layer bonding strength
+    \item \textbf{Wall Thickness}: Direct structural parameter for mechanical strength
+    \item \textbf{Infill Density}: Critical for internal structural integrity
+    \item \textbf{Nozzle Temperature}: Affects material flow and bonding
+    \item \textbf{Bed Temperature}: Influences first layer adhesion and overall part integrity
+    \item \textbf{Material Type}: Material-specific mechanical properties
+\end{itemize}
+
+\paragraph{Elongation Model Coefficients}
+The elongation model (R² = 0.7053) focuses on flexibility parameters:
+\begin{itemize}
+    \item \textbf{Layer Height}: Affects layer adhesion and flexibility
+    \item \textbf{Infill Density}: Influences internal structure and deformation characteristics
+    \item \textbf{Nozzle Temperature}: Critical for material flow and inter-layer bonding
+    \item \textbf{Bed Temperature}: Affects stress distribution and part flexibility
+    \item \textbf{Print Speed}: Influences material deposition and cooling rates
+    \item \textbf{Material Type}: Inherent material flexibility properties
+\end{itemize}
+
+\subsubsection{Practical Implications and Optimization Strategies}
+
+The comprehensive analysis provides actionable insights for 3D printing optimization:
+
+\paragraph{Universal Critical Parameters}
+\begin{enumerate}
+    \item \textbf{Layer Height}: Emerges as the most critical parameter affecting all quality metrics. Optimization should prioritize this parameter for overall quality improvement.
+    \item \textbf{Material Selection}: Consistently significant across all models, highlighting the fundamental importance of material choice in determining final part quality.
+    \item \textbf{Temperature Control}: Both nozzle and bed temperatures show significant effects across multiple quality metrics, emphasizing the need for precise thermal management.
+\end{enumerate}
+
+\paragraph{Quality-Specific Optimization}
+\begin{itemize}
+    \item \textbf{For Surface Quality (Roughness)}: Focus on layer height, print speed, and temperature control
+    \item \textbf{For Mechanical Strength}: Prioritize wall thickness, infill density, and layer height
+    \item \textbf{For Flexibility (Elongation)}: Optimize infill density, print speed, and temperature parameters
+\end{itemize}
+
+\paragraph{Model Reliability Assessment}
+\begin{itemize}
+    \item \textbf{High Confidence}: Roughness predictions (85.7\% variance explained)
+    \item \textbf{Moderate Confidence}: Elongation predictions (66.4\% variance explained)
+    \item \textbf{Acceptable Confidence}: Tension strength predictions (62.0\% variance explained)
+\end{itemize}
+
+\paragraph{Limitations and Future Research}
+While the models demonstrate good predictive capability, the tension strength model's moderate R² (62.0\%) suggests that additional factors not captured in this dataset may influence tensile properties. Future research could investigate:
+\begin{itemize}
+    \item Environmental factors (humidity, ambient temperature)
+    \item Post-processing effects
+    \item Printer-specific mechanical characteristics
+    \item Advanced material interactions
+\end{itemize}
