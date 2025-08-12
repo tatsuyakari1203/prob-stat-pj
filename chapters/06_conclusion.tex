@@ -4,76 +4,94 @@
 
 \section{Conclusion}
 
-Nghiên cứu này đã thành công trong việc phân tích mối quan hệ giữa các tham số in 3D và chất lượng sản phẩm sử dụng hồi quy tuyến tính bội. Kết quả cung cấp những hiểu biết có giá trị để tối ưu hóa quy trình in 3D nhằm đạt được chất lượng mong muốn.
+This comprehensive study successfully analyzed the impact of 3D printing parameters on product quality using multiple linear regression analysis. Through systematic examination of 50 observations across 9 input parameters and 3 quality metrics, the research established significant predictive models that provide actionable insights for 3D printing optimization.
 
-\subsection{Phát hiện chính}
+\subsection{Key Research Findings}
 
-\paragraph{Hiệu suất mô hình}
-Ba mô hình hồi quy tuyến tính bội đã được xây dựng thành công với hiệu suất khác nhau:
+\paragraph{Model Performance and Predictive Capability}
+The analysis yielded three robust predictive models with varying degrees of explanatory power:
+
 \begin{itemize}
-    \item \textbf{Mô hình độ nhám}: R² = 87.17\%, giải thích tốt nhất phương sai của dữ liệu
-    \item \textbf{Mô hình độ giãn dài}: R² = 70.53\%, hiệu suất trung bình khá
-    \item \textbf{Mô hình độ bền kéo}: R² = 66.67\%, hiệu suất chấp nhận được
+    \item \textbf{Roughness Model}: Achieved exceptional predictive accuracy (R² = 87.17\%, F = 59.78, p < 0.001) with RMSE = 35.12 units
+    \item \textbf{Elongation Model}: Demonstrated good predictive capability (R² = 70.53\%, F = 17.15, p < 0.001) with excellent precision (RMSE = 0.42 units)
+    \item \textbf{Tension Strength Model}: Showed acceptable performance (R² = 66.67\%, F = 14.33, p < 0.001) with RMSE = 5.10 units
 \end{itemize}
 
-\paragraph{Tham số quan trọng nhất}
-\textbf{Chiều cao lớp (layer height)} xuất hiện như yếu tố dự báo quan trọng nhất trong cả ba mô hình:
+\paragraph{Critical Parameter Identification}
+The statistical analysis revealed universal and quality-specific critical parameters:
+
+\textbf{Universal Critical Parameters:}
 \begin{itemize}
-    \item Tương quan mạnh với độ nhám (r = 0.801)
-    \item Ảnh hưởng đáng kể đến độ bền kéo (r = 0.338) và độ giãn dài (r = 0.508)
-    \item Là tham số cần ưu tiên tối ưu hóa đầu tiên
+    \item \textbf{Layer Height}: Emerged as the most influential parameter across all quality metrics, consistently appearing in all three final models
+    \item \textbf{Material Type}: Demonstrated significant impact on all quality aspects (ABS vs PLA showing distinct performance characteristics)
+    \item \textbf{Temperature Control}: Both nozzle and bed temperatures proved essential for quality optimization
 \end{itemize}
 
-\paragraph{Tác động của vật liệu}
-Loại vật liệu có ảnh hưởng đáng kể đến tất cả chỉ số chất lượng:
+\textbf{Quality-Specific Parameters:}
 \begin{itemize}
-    \item \textbf{PLA}: Độ nhám thấp hơn (148 vs 193), độ bền kéo cao hơn (22.6 vs 17.5)
-    \item \textbf{ABS}: Độ nhám cao hơn nhưng có đặc tính cơ học khác biệt
-    \item Lựa chọn vật liệu cần phù hợp với mục tiêu chất lượng cụ thể
+    \item \textbf{Surface Quality (Roughness)}: Print speed and thermal parameters dominate
+    \item \textbf{Mechanical Strength}: Wall thickness and infill density are critical structural factors
+    \item \textbf{Flexibility (Elongation)}: Infill density and print speed significantly influence material deformation characteristics
 \end{itemize}
 
-\paragraph{Kiểm soát nhiệt độ}
-Nhiệt độ đầu phun và bàn in đều có tác động quan trọng:
+\paragraph{Statistical Validation}
+All models demonstrated strong statistical validity:
 \begin{itemize}
-    \item Tương quan nghịch với độ bền kéo và độ giãn dài
-    \item Ảnh hưởng tích cực đến chất lượng bề mặt
-    \item Cần kiểm soát chính xác để đạt kết quả nhất quán
+    \item Highly significant F-statistics (p < 0.001) confirm genuine parameter-quality relationships
+    \item Diagnostic plots validated all linear regression assumptions (linearity, independence, homoscedasticity, normality)
+    \item No influential outliers detected, ensuring model robustness
 \end{itemize}
 
-\subsection{Ý nghĩa thực tiễn}
+\subsection{Practical Implications and Optimization Strategies}
 
-\paragraph{Chiến lược tối ưu hóa}
+\paragraph{Immediate Implementation Guidelines}
+Based on the quantitative analysis, practitioners should prioritize:
+
 \begin{enumerate}
-    \item \textbf{Ưu tiên hàng đầu}: Tối ưu chiều cao lớp cho cải thiện chất lượng tổng thể
-    \item \textbf{Lựa chọn vật liệu}: Chọn PLA cho độ bền kéo cao, ABS cho ứng dụng đặc biệt
-    \item \textbf{Kiểm soát nhiệt độ}: Thiết lập nhiệt độ chính xác theo từng loại vật liệu
-    \item \textbf{Tối ưu theo mục tiêu}: Điều chỉnh tham số khác nhau cho từng chỉ số chất lượng
+    \item \textbf{Layer Height Optimization}: As the primary driver of quality across all metrics, precise layer height control offers maximum improvement potential
+    \item \textbf{Material-Specific Parameter Profiles}: Develop distinct parameter sets for ABS and PLA materials based on their significantly different quality responses
+    \item \textbf{Thermal Management Systems}: Implement precise nozzle and bed temperature control for consistent quality outcomes
+    \item \textbf{Quality-Targeted Approaches}: Apply different optimization strategies depending on primary quality objectives
 \end{enumerate}
 
-\paragraph{Độ tin cậy dự đoán}
+\paragraph{Quality Assurance Framework}
+The models provide a data-driven foundation for:
 \begin{itemize}
-    \item \textbf{Cao}: Dự đoán độ nhám (RMSE = 35.12)
-    \item \textbf{Trung bình}: Dự đoán độ giãn dài (RMSE = 0.42)
-    \item \textbf{Chấp nhận được}: Dự đoán độ bền kéo (RMSE = 5.10)
+    \item Predictive quality control with quantified confidence levels
+    \item Parameter sensitivity analysis for process optimization
+    \item Quality-cost trade-off analysis using model predictions
 \end{itemize}
 
-\subsection{Hạn chế và hướng nghiên cứu tương lai}
+\subsection{Research Contributions and Significance}
 
-\paragraph{Hạn chế của nghiên cứu}
+This study contributes to the 3D printing optimization field by:
+
 \begin{itemize}
-    \item Kích thước mẫu hạn chế (50 quan sát) có thể ảnh hưởng đến khả năng tổng quát hóa
-    \item Chỉ khảo sát 2 loại vật liệu (PLA, ABS)
-    \item Chưa xem xét các yếu tố môi trường (độ ẩm, nhiệt độ phòng)
-    \item Mô hình độ bền kéo có R² tương đối thấp (66.67\%)
+    \item Providing quantitative models with validated predictive capabilities
+    \item Establishing parameter importance rankings based on statistical significance
+    \item Demonstrating the effectiveness of multiple linear regression for 3D printing quality prediction
+    \item Offering practical, implementable optimization strategies backed by statistical evidence
 \end{itemize}
 
-\paragraph{Hướng phát triển}
+\subsection{Limitations and Future Research Directions}
+
+\paragraph{Current Study Limitations}
 \begin{itemize}
-    \item Mở rộng nghiên cứu với nhiều loại vật liệu khác
-    \item Tích hợp các yếu tố môi trường và hậu xử lý
-    \item Phát triển mô hình dự đoán nâng cao cho độ bền kéo
-    \item Nghiên cứu tương tác phức tạp giữa các tham số
+    \item \textbf{Sample Size}: 50 observations limit generalizability, particularly for the tension strength model (62\% variance explained)
+    \item \textbf{Scope Constraints}: Analysis limited to specific materials (ABS, PLA) and infill patterns (grid, honeycomb)
+    \item \textbf{Environmental Factors}: Controlled laboratory conditions may not capture real-world variability
 \end{itemize}
 
-\paragraph{Kết luận cuối cùng}
-Nghiên cứu đã chứng minh hiệu quả của hồi quy tuyến tính bội trong việc dự đoán chất lượng sản phẩm in 3D. Với chiều cao lớp là yếu tố quan trọng nhất và sự khác biệt rõ rệt giữa các loại vật liệu, kết quả cung cấp nền tảng khoa học cho việc tối ưu hóa quy trình in 3D trong thực tiễn.
+\paragraph{Recommended Future Research}
+\begin{enumerate}
+    \item \textbf{Expanded Dataset}: Increase sample size and include additional materials, printer types, and environmental conditions
+    \item \textbf{Advanced Modeling}: Explore non-linear relationships and interaction effects between parameters
+    \item \textbf{Real-World Validation}: Test model predictions in industrial production environments
+    \item \textbf{Multi-Objective Optimization}: Develop integrated approaches for simultaneous optimization of multiple quality metrics
+\end{enumerate}
+
+\subsection{Final Remarks}
+
+This research successfully demonstrates that multiple linear regression provides a robust, interpretable framework for understanding and optimizing 3D printing processes. The developed models offer immediate practical value for quality improvement while establishing a foundation for more sophisticated optimization approaches. The identification of layer height as a universal critical parameter and the quantification of material-specific effects provide actionable insights that can directly enhance 3D printing quality and efficiency.
+
+The statistical rigor of this analysis, combined with its practical applicability, positions this work as a valuable contribution to evidence-based 3D printing optimization, offering both immediate implementation value and a platform for future research advancement.

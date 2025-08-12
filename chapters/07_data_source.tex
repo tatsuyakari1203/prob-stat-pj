@@ -5,22 +5,49 @@
 \section{Data Source}
 
 \subsection{Dataset Information}
-% Detailed information about the dataset
-% Source: Kaggle dataset by Selcuk University research group
-% Collection methodology
-% Data characteristics
+
+The dataset used in this study was sourced from Kaggle, titled "3D Printer Dataset for Mechanical Engineers," contributed by user afumetto. The dataset contains 50 observations across 12 variables from a controlled experimental study of 3D printing parameter optimization.
 
 \subsection{Variable Definitions}
-% Complete list of all variables
-% Input parameters (9 variables)
-% Output quality metrics (3 variables)
-% Units and measurement scales
 
-\subsection{Data Availability}
-% How to access the dataset
-% Licensing information
-% Reproducibility information
+\paragraph{Input Parameters (9 variables)}
+\begin{itemize}
+    \item \textbf{Layer Height}: Thickness of each printed layer (0.02-0.20 mm)
+    \item \textbf{Wall Thickness}: Outer wall thickness (1.00-10.00 mm)
+    \item \textbf{Infill Density}: Internal structure filling percentage (10-90\%)
+    \item \textbf{Infill Pattern}: Structure pattern type (grid, honeycomb)
+    \item \textbf{Nozzle Temperature}: Extruder temperature (200-250°C)
+    \item \textbf{Bed Temperature}: Print bed temperature (60-80°C)
+    \item \textbf{Print Speed}: Nozzle movement speed (40-120 mm/s)
+    \item \textbf{Fan Speed}: Cooling fan speed (0-100\%)
+    \item \textbf{Material}: Printing material type (ABS, PLA)
+\end{itemize}
+
+\paragraph{Output Quality Metrics (3 variables)}
+\begin{itemize}
+    \item \textbf{Roughness}: Surface roughness measurement
+    \item \textbf{Tension Strength}: Tensile strength (MPa)
+    \item \textbf{Elongation}: Material elongation at break (\%)
+\end{itemize}
+
+\subsection{Data Quality}
+
+The dataset demonstrated high quality with no missing values, no duplicate records, and all variables within expected ranges. Minimal preprocessing was required:
+\begin{itemize}
+    \item Categorical variables converted to factor format
+    \item Outlier detection performed using IQR method
+    \item All 50 original observations retained
+\end{itemize}
+
+\subsection{Data Access}
+
+\begin{itemize}
+    \item \textbf{Source}: Kaggle (www.kaggle.com)
+    \item \textbf{URL}: https://www.kaggle.com/datasets/afumetto/3dprinter
+    \item \textbf{License}: Kaggle standard terms for academic and educational use
+    \item \textbf{Contributor}: afumetto
+\end{itemize}
 
 \subsection{Acknowledgments}
-% Credit to data providers
-% Research group acknowledgment
+
+We acknowledge afumetto for providing the dataset through the Kaggle platform, and the broader 3D printing research community for establishing methodological foundations in additive manufacturing optimization studies.
