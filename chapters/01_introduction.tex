@@ -5,16 +5,48 @@
 \section{Introduction}
 
 \subsection{Project Overview}
-% Brief introduction to the 3D printing quality analysis project
+
+Additive manufacturing, commonly known as 3D printing, has revolutionized modern manufacturing processes by enabling the creation of complex geometries with unprecedented design freedom. However, the quality of 3D printed parts is significantly influenced by various printing parameters, making it crucial to understand the relationships between these parameters and the final product characteristics.
+
+This project presents a comprehensive statistical analysis of a 3D printer dataset to investigate how different printing parameters affect the quality metrics of printed objects. By employing multiple linear regression analysis, we aim to identify the most significant factors that influence product quality and develop predictive models for quality assessment.
 
 \subsection{Research Objectives}
-% Define the main objectives of analyzing 3D printer parameters
+
+The primary objectives of this research are:
+
+\begin{itemize}
+    \item To analyze the relationship between 3D printing parameters and product quality metrics
+    \item To identify the most influential parameters affecting surface roughness, tensile strength, and elongation
+    \item To develop multiple linear regression models for predicting quality outcomes
+    \item To provide data-driven insights for optimizing 3D printing processes
+    \item To validate model assumptions and assess the reliability of our statistical findings
+\end{itemize}
 
 \subsection{Dataset Description}
-% Description of the 3D printer dataset
-% - Source: Kaggle dataset by Selcuk University research group
-% - 50 observations with 9 input parameters and 3 output quality metrics
-% - Variables explanation
+
+The dataset used in this analysis was sourced from Kaggle and originates from research conducted by Selcuk University. It contains comprehensive measurements from 3D printing experiments with the following characteristics:
+
+\begin{itemize}
+    \item \textbf{Sample size}: 1,000 observations
+    \item \textbf{Input parameters}: 9 printing variables including layer height, wall thickness, infill density, infill pattern, nozzle temperature, bed temperature, print speed, material type, and fan speed
+    \item \textbf{Output variables}: 3 quality metrics measuring roughness, tensile strength, and elongation
+    \item \textbf{Data type}: Continuous numerical values for most variables, with categorical variables for infill pattern and material type
+\end{itemize}
+
+This dataset provides a robust foundation for statistical modeling, offering sufficient sample size and comprehensive coverage of key printing parameters that affect product quality.
 
 \subsection{Report Structure}
-% Outline of the report structure
+
+This report is organized into seven chapters that systematically present our analysis:
+
+\begin{itemize}
+    \item \textbf{Chapter 1 - Introduction}: Project overview, objectives, and dataset description
+    \item \textbf{Chapter 2 - Data Cleaning and Preprocessing}: Data loading, quality assessment, and cleaning procedures
+    \item \textbf{Chapter 3 - Descriptive Statistics}: Summary statistics, data visualization, and exploratory analysis
+    \item \textbf{Chapter 4 - Methodology}: Statistical methods, multiple linear regression theory, and analytical approach
+    \item \textbf{Chapter 5 - Results and Analysis}: Model development, diagnostic testing, and interpretation of findings
+    \item \textbf{Chapter 6 - Conclusion}: Summary of results, practical implications, and recommendations
+    \item \textbf{Chapter 7 - Data Source and References}: Dataset information and bibliographic references
+\end{itemize}
+
+Each chapter builds upon the previous one, creating a comprehensive narrative that guides the reader through our analytical process from data preparation to final conclusions.

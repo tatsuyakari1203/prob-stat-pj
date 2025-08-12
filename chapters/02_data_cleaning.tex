@@ -2,23 +2,205 @@
 % CHAPTER 2: DATA CLEANING AND PREPROCESSING
 % ===============================================================================
 
-\section{Data Cleaning and Preprocessing}
+\subsection{Data Cleaning and Preprocessing}
 
-\subsection{Data Loading and Initial Inspection}
-% R code for loading the dataset
-% Initial data structure examination
+This chapter presents the systematic approach used to load, assess, and clean the 3D printer dataset. The data preprocessing pipeline ensures data quality and prepares the dataset for subsequent statistical analysis.
 
-\subsection{Data Quality Assessment}
-% Check for missing values, outliers, and data inconsistencies
-% Summary of data quality issues found
+\subsubsection{Data Loading}
 
-\subsection{Data Cleaning Process}
-% R code for data cleaning steps
-% - Handling missing values
-% - Outlier detection and treatment
-% - Data type conversions
-% - Variable transformations if needed
+The first step involves loading the dataset and examining its basic structure. The following R code demonstrates the data loading process:
 
-\subsection{Final Cleaned Dataset}
-% Summary of the cleaned dataset
-% Comparison before and after cleaning
+\begin{lstlisting}[language=R, caption={Data Loading and Initial Exploration}, label={lst:data_load}]
+# Load necessary libraries
+library(readr)
+library(dplyr)
+
+# Load the 3D printer dataset
+data <- read_csv("/home/kari/prob-stat-pj/3dprintdata/data.csv")
+
+# Display basic information about the dataset
+str(data)
+head(data, 10)
+colnames(data)
+summary(data)
+\end{lstlisting}
+
+The dataset contains 50 observations with 12 variables, including 9 input parameters (layer\_height, wall\_thickness, infill\_density, infill\_pattern, nozzle\_temperature, bed\_temperature, print\_speed, material, fan\_speed) and 3 output quality metrics (roughness, tension\_strength, elongation). The \texttt{str()} function reveals the data types, while \texttt{summary()} provides basic descriptive statistics for each variable.
+
+\textbf{Output:}
+\begin{verbatim}
+Dimensions: 50 rows x 12 columns
+Variables: layer_height, wall_thickness, infill_density, infill_pattern, 
+          nozzle_temperature, bed_temperature, print_speed, material, 
+          fan_speed, roughness, tension_strenght, elongation
+\end{verbatim}
+
+\subsubsection{Data Quality Assessment}
+
+Before proceeding with analysis, it is essential to assess the quality of the dataset by checking for missing values, duplicate records, and potential outliers.
+
+\paragraph{Missing Values and Duplicates}
+
+\begin{lstlisting}[language=R, caption={Missing Values and Duplicate Detection}, label={lst:quality_check}]
+# Check for missing values
+missing_values <- sapply(data, function(x) sum(is.na(x)))
+print(missing_values)
+cat("Total missing values:", sum(missing_values), "\n")
+
+# Check for duplicate rows
+duplicate_count <- sum(duplicated(data))
+cat("Number of duplicate rows:", duplicate_count, "\n")
+\end{lstlisting}
+
+The quality assessment revealed that the dataset is complete with no missing values (0 missing values across all variables) and no duplicate records (0 duplicate rows), indicating high data quality.
+
+\textbf{Output:}
+\begin{verbatim}
+Missing values: 0
+Duplicate rows: 0
+\end{verbatim}
+
+\paragraph{Outlier Detection}
+
+Outliers were detected using the Interquartile Range (IQR) method, which identifies values that fall outside the range [Q1 - 1.5×IQR, Q3 + 1.5×IQR]:
+
+\begin{lstlisting}[language=R, caption={Outlier Detection Using IQR Method}, label={lst:outlier_detection}]
+# Define continuous variables for outlier detection
+continuous_vars <- c("layer_height", "nozzle_temperature", "bed_temperature", 
+                    "print_speed", "infill_density", "wall_thickness", 
+                    "fan_speed", "roughness", "tension_strenght", "elongation")
+
+# Outlier detection for each continuous variable
+for(var in continuous_vars) {
+  if(var %in% colnames(data)) {
+    Q1 <- quantile(data[[var]], 0.25, na.rm = TRUE)
+    Q3 <- quantile(data[[var]], 0.75, na.rm = TRUE)
+    IQR_val <- Q3 - Q1
+    lower_bound <- Q1 - 1.5 * IQR_val
+    upper_bound <- Q3 + 1.5 * IQR_val
+    
+    outliers <- data[[var]] < lower_bound | data[[var]] > upper_bound
+    outlier_count <- sum(outliers, na.rm = TRUE)
+    
+    cat(sprintf("%s: Outliers = %d\n", var, outlier_count))
+  }
+}
+\end{lstlisting}
+
+The IQR method systematically evaluates each continuous variable by calculating the first quartile (Q1), third quartile (Q3), and the interquartile range. Values falling outside the calculated bounds are flagged as potential outliers for further investigation.
+
+\subsubsection{Data Cleaning Process}
+
+The data cleaning process involves handling any identified issues and preparing the data for analysis through appropriate data type conversions.
+
+\paragraph{Data Type Conversions}
+
+Categorical variables require conversion to factor type for proper statistical analysis:
+
+\begin{lstlisting}[language=R, caption={Data Type Conversions}, label={lst:data_conversion}]
+# Create a copy of original data for cleaning
+data_cleaned <- data
+
+# Convert categorical variables to factors
+if("infill_pattern" %in% colnames(data_cleaned)) {
+  data_cleaned$infill_pattern <- as.factor(data_cleaned$infill_pattern)
+  cat("Converted infill_pattern to factor\n")
+}
+
+if("material" %in% colnames(data_cleaned)) {
+  data_cleaned$material <- as.factor(data_cleaned$material)
+  cat("Converted material to factor\n")
+}
+
+# Verify the conversion
+str(data_cleaned)
+\end{lstlisting}
+
+The \texttt{infill\_pattern} variable contains two levels (grid and honeycomb), while the \texttt{material} variable has two levels (ABS and PLA). Converting these to factors ensures they are treated as categorical variables in subsequent statistical analyses rather than character strings.
+
+\textbf{Output:}
+\begin{verbatim}
+Factor variables: infill_pattern, material
+infill_pattern levels: grid (25), honeycomb (25)
+material levels: abs (25), pla (25)
+\end{verbatim}
+
+\paragraph{Data Validation}
+
+After cleaning, it is important to validate the data ranges and distributions:
+
+\begin{lstlisting}[language=R, caption={Data Range Validation}, label={lst:data_validation}]
+# Check data ranges for continuous variables
+for(var in continuous_vars) {
+  if(var %in% colnames(data_cleaned)) {
+    cat(sprintf("%s: Min=%.3f, Max=%.3f, Range=%.3f\n", 
+                var, min(data_cleaned[[var]], na.rm=TRUE), 
+                max(data_cleaned[[var]], na.rm=TRUE),
+                max(data_cleaned[[var]], na.rm=TRUE) - min(data_cleaned[[var]], na.rm=TRUE)))
+  }
+}
+
+# Check categorical variable distributions
+print(table(data_cleaned$infill_pattern))
+print(table(data_cleaned$material))
+\end{lstlisting}
+
+This validation step ensures that all variables have reasonable ranges and that categorical variables have balanced distributions, which is important for the reliability of subsequent statistical analyses.
+
+\subsubsection{Cleaned Dataset Summary}
+
+The data cleaning process resulted in a high-quality dataset ready for analysis:
+
+\begin{lstlisting}[language=R, caption={Final Dataset Summary}, label={lst:final_summary}]
+# Compare original and cleaned datasets
+cat("Original dataset:", nrow(data), "rows x", ncol(data), "columns\n")
+cat("Cleaned dataset:", nrow(data_cleaned), "rows x", ncol(data_cleaned), "columns\n")
+cat("Rows removed:", nrow(data) - nrow(data_cleaned), "\n")
+
+# Final summary statistics
+summary(data_cleaned)
+
+# Save cleaned dataset
+write_csv(data_cleaned, "/home/kari/prob-stat-pj/3dprintdata/data_cleaned.csv")
+\end{lstlisting}
+
+\paragraph{Key Findings from Data Cleaning}
+
+The data cleaning process revealed several important characteristics:
+
+\begin{itemize}
+    \item \textbf{Data Completeness}: The dataset is complete with no missing values across all 50 observations and 12 variables
+    \item \textbf{Data Integrity}: No duplicate records were found, ensuring each observation represents a unique experimental condition
+    \item \textbf{Variable Types}: Successfully converted 2 categorical variables (infill\_pattern and material) to factors with balanced distributions (25 observations each for grid/honeycomb patterns and ABS/PLA materials)
+    \item \textbf{Data Quality}: All continuous variables show reasonable ranges consistent with typical 3D printing parameters and quality metrics
+    \item \textbf{Final Dataset}: The cleaned dataset maintains the original 50 × 12 structure, indicating no data loss during the cleaning process
+\end{itemize}
+
+\textbf{Summary Statistics of Cleaned Dataset:}
+\begin{verbatim}
+  layer_height   wall_thickness  infill_density   infill_pattern
+ Min.   :0.020   Min.   : 1.00   Min.   :10.0   grid     :25    
+ 1st Qu.:0.060   1st Qu.: 3.00   1st Qu.:40.0   honeycomb:25    
+ Median :0.100   Median : 5.00   Median :50.0                   
+ Mean   :0.106   Mean   : 5.22   Mean   :53.4                   
+ 3rd Qu.:0.150   3rd Qu.: 7.00   3rd Qu.:80.0                   
+ Max.   :0.200   Max.   :10.00   Max.   :90.0                   
+
+ nozzle_temperature bed_temperature  print_speed  material   fan_speed  
+ Min.   :200.0      Min.   :60      Min.   : 40   abs:25   Min.   :  0  
+ 1st Qu.:210.0      1st Qu.:65      1st Qu.: 40   pla:25   1st Qu.: 25  
+ Median :220.0      Median :70      Median : 60            Median : 50  
+ Mean   :221.5      Mean   :70      Mean   : 64            Mean   : 50  
+ 3rd Qu.:230.0      3rd Qu.:75      3rd Qu.: 60            3rd Qu.: 75  
+ Max.   :250.0      Max.   :80      Max.   :120            Max.   :100  
+
+   roughness     tension_strenght   elongation   
+ Min.   : 21.0   Min.   : 4.00    Min.   :0.400  
+ 1st Qu.: 92.0   1st Qu.:12.00    1st Qu.:1.100  
+ Median :165.5   Median :19.00    Median :1.550  
+ Mean   :170.6   Mean   :20.08    Mean   :1.672  
+ 3rd Qu.:239.2   3rd Qu.:27.00    3rd Qu.:2.175  
+ Max.   :368.0   Max.   :37.00    Max.   :3.300  
+\end{verbatim}
+
+The cleaned dataset provides a solid foundation for descriptive statistics and subsequent multiple linear regression analysis, with all variables properly formatted and validated for statistical modeling.
